@@ -27,8 +27,8 @@ public class RsyncSynchronizer {
 		makeDirs();
 		checkRsyncAvailable();
 
-		logger.info("Will sync files from ${commandBuilder.outboxLocalRoute()} to ${commandBuilder.outboxRemoteRoute()}");
-		logger.info("Will sync files from ${commandBuilder.inboxRemoteRoute()} to ${commandBuilder.inboxLocalRoute()}");
+		logger.info("Will sync files from "+commandBuilder.getOutboxLocalRoute()+" to "+commandBuilder.getOutboxRemoteRoute()+"");
+		logger.info("Will sync files from "+commandBuilder.getInboxRemoteRoute()+" to "+commandBuilder.getInboxLocalRoute()+"");
 	}
 	
 	public void uploadDocuments() throws IOException, InterruptedException {

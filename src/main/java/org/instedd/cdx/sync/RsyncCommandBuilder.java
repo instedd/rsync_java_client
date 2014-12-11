@@ -36,24 +36,24 @@ public class RsyncCommandBuilder {
 	}
 	
 	public String getOutboxRemoteRoute() { 
-		return "${remoteHost}:/inbox";
+		return ""+settings.remoteHost+":/inbox";
 	}
 	
 	public String getInboxLocalRoute() { 
 		return localRoute(settings.inboxLocalDir);
 	}
 	public String getInboxRemoteRoute() { 
-		return "${remoteHost}:/outbox/" ; //trailing slash prevents an 'outbox' directory to be created
+		return ""+settings.remoteHost+":/outbox/" ; //trailing slash prevents an 'outbox' directory to be created
 	}
 	
 	public String shellCommand() {
-		String userParam = isEmpty(settings.remoteUser) ? "" : "-l ${remoteUser}";
-		String knownHostsParam = isEmpty(settings.knownHostsFilePath) ? "" : "-oUserKnownHostsFile=\"${cygwinPath(knownHostsFilePath)}\"";
-		return "ssh -p ${remotePort} ${userParam} -i \"${cygwinPath(remoteKey)}\" ${knownHostsParam} -oBatchMode=yes";
+		String userParam = isEmpty(settings.remoteUser) ? "" : "-l "+settings.remoteUser+"";
+		String knownHostsParam = isEmpty(settings.knownHostsFilePath) ? "" : "-oUserKnownHostsFile=\""+cygwinPath(settings.knownHostsFilePath)+"\"";
+		return "ssh -p "+settings.remotePort+" "+userParam+" -i \""+cygwinPath(settings.remoteKey)+"\" "+knownHostsParam+" -oBatchMode=yes";
 	}
 
 	String localRoute(String dir) {
-		dir = dir.endsWith("/") ? dir : "${dir}/";
+		dir = dir.endsWith("/") ? dir : ""+dir+"/";
 		return cygwinPath(dir);
 	}
 	
