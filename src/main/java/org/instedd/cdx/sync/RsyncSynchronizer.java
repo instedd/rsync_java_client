@@ -13,8 +13,7 @@ import org.apache.ivy.ant.IvyAntSettings.Credentials;
 
 public class RsyncSynchronizer {
 
-	private final Logger logger = Logger.getLogger(RsyncSynchronizer.class
-			.getName());
+	private final Logger logger = Logger.getLogger(RsyncSynchronizer.class.getName());
 
 	private RsyncCommandBuilder commandBuilder;
 	private Collection<RsyncSynchronizerListener> listeners = new ArrayList<>();
@@ -27,14 +26,13 @@ public class RsyncSynchronizer {
 		makeDirs();
 		checkRsyncAvailable();
 
-		logger.info("Will sync files from "+commandBuilder.getOutboxLocalRoute()+" to "+commandBuilder.getOutboxRemoteRoute()+"");
-		logger.info("Will sync files from "+commandBuilder.getInboxRemoteRoute()+" to "+commandBuilder.getInboxLocalRoute()+"");
+		logger.info("Will sync files from " + commandBuilder.getOutboxLocalRoute() + " to " + commandBuilder.getOutboxRemoteRoute() + "");
+		logger.info("Will sync files from " + commandBuilder.getInboxRemoteRoute() + " to " + commandBuilder.getInboxLocalRoute() + "");
 	}
-	
+
 	public void uploadDocuments() throws IOException, InterruptedException {
 		this.sync(commandBuilder.buildUploadCommand());
 	}
-
 
 	public synchronized void sync(ProcessBuilder command) throws IOException, InterruptedException {
 		// logger.debug("Running rsync: {}", command.toString());
@@ -42,8 +40,7 @@ public class RsyncSynchronizer {
 		File errFile = File.createTempFile("sync", "err");
 		File outFile = File.createTempFile("sync", "out");
 
-		Process process = command.redirectError(errFile)
-				.redirectOutput(outFile).start();
+		Process process = command.redirectError(errFile).redirectOutput(outFile).start();
 		process.waitFor(); // TODO do in background
 
 		// String stdout = stdoutBuffer.toString();
@@ -80,16 +77,14 @@ public class RsyncSynchronizer {
 			// logger.warn(
 			// "Could not run test rsync command. Please check that the executable is available.",
 			// e);F
-			throw new IllegalStateException(
-					"Could not run test rsync command. Please check that the executable is available.",
-					e);
+			throw new IllegalStateException("Could not run test rsync command. Please check that the executable is available.", e);
 		}
 	}
 
 	protected boolean makeDirs() {
 		return new File(commandBuilder.getOutboxLocalDir()).mkdirs();
 	}
-	
+
 	protected void fireFilesTransfered(List<String> transferredFilenames) {
 		for (RsyncSynchronizerListener listener : listeners)
 			listener.onFilesTransfered(transferredFilenames);
