@@ -1,6 +1,10 @@
 package org.instedd.cdx.sync;
 
+import static org.apache.commons.lang.StringUtils.isEmpty;
+
 import java.util.Arrays;
+
+import org.apache.commons.lang.SystemUtils;
 
 public class RsyncCommandBuilder {
 
@@ -46,10 +50,6 @@ public class RsyncCommandBuilder {
 		String userParam = isEmpty(settings.remoteUser) ? "" : "-l ${remoteUser}";
 		String knownHostsParam = isEmpty(settings.knownHostsFilePath) ? "" : "-oUserKnownHostsFile=\"${cygwinPath(knownHostsFilePath)}\"";
 		return "ssh -p ${remotePort} ${userParam} -i \"${cygwinPath(remoteKey)}\" ${knownHostsParam} -oBatchMode=yes";
-	}
-
-	private boolean isEmpty(String text) {
-		return text == null || text.isEmpty();
 	}
 
 	String localRoute(String dir) {
