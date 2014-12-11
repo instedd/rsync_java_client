@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
+import org.apache.bsf.util.IOUtils;
+import org.apache.commons.io.FileUtils;
+
 public class RsyncSynchronizer {
 
 	private final Logger logger = Logger.getLogger(RsyncSynchronizer.class.getName());
@@ -23,40 +26,47 @@ public class RsyncSynchronizer {
 	public void setUp() {
 		makeDirs();
 		checkRsyncAvailable();
-
-		logger.info("Will sync files from " + commandBuilder.getOutboxLocalRoute() + " to " + commandBuilder.getOutboxRemoteRoute() + "");
-		logger.info("Will sync files from " + commandBuilder.getInboxRemoteRoute() + " to " + commandBuilder.getInboxLocalRoute() + "");
 	}
 
-	public void uploadDocuments() throws IOException, InterruptedException {
+	public void uploadDocuments() throws IOException {
+		logger.info("Will sync files from " + commandBuilder.getInboxRemoteRoute() + " to " + commandBuilder.getInboxLocalRoute() + "");
 		this.sync(commandBuilder.buildUploadCommand());
 	}
-	
-	public void downloadDocuments() throws IOException, InterruptedException {
+
+	public void downloadDocuments() throws IOException {
+		logger.info("Will sync files from " + commandBuilder.getOutboxLocalRoute() + " to " + commandBuilder.getOutboxRemoteRoute() + "");
 		this.sync(commandBuilder.buildDownloadCommand());
 	}
 
-	protected synchronized void sync(ProcessBuilder command) throws IOException, InterruptedException {
-		// logger.debug("Running rsync: {}", command.toString());
+	protected synchronized void sync(ProcessBuilder command) throws IOException {
+		File errFile = null, outFile = null;
+		try {
+			errFile = File.createTempFile("sync", "err");
+			outFile = File.createTempFile("sync", "out");
 
-		File errFile = File.createTempFile("sync", "err");
-		File outFile = File.createTempFile("sync", "out");
+			runCommand(command, errFile, outFile);
 
-		Process process = command.redirectError(errFile).redirectOutput(outFile).start();
-		process.waitFor(); // TODO do in background
-
-		// String stdout = stdoutBuffer.toString();
-		// if (StringUtils.isEmpty(stderr)) {
-		// logger.trace("Standard output for rsync was:\n{}", stdout);
-		// } else {
-		// logger.warn("Standard output for rsync was:\n{}", stdout);
-		// logger.warn("Error output for rsync was:\n{}", stderr);
-		// }
-		List<String> transferredFilenames = parseTransferredFilenames(outFile);
-		if (!transferredFilenames.isEmpty()) {
-			fireFilesTransfered(transferredFilenames);
+			List<String> transferredFilenames = parseTransferredFilenames(outFile);
+			if (!transferredFilenames.isEmpty()) {
+				fireFilesTransfered(transferredFilenames);
+			}
+		} finally {
+			FileUtils.deleteQuietly(errFile);
+			FileUtils.deleteQuietly(outFile);
 		}
 	}
+
+	private void runCommand(ProcessBuilder command, File errFile, File outFile) throws IOException {
+	  Process process = command.redirectError(errFile).redirectOutput(outFile).start();
+	  try {
+	    process.waitFor();
+    } catch (InterruptedException e) {
+    	logger.info("Command aborted");
+    } 
+	  // TODO do in background
+	  logger.info("Proces exited with value " + process.exitValue());
+	  logger.info("Stderr was " + FileUtils.readFileToString(errFile));
+  }
 
 	protected List<String> parseTransferredFilenames(File outFile) throws FileNotFoundException {
 		List<String> transferredFilenames = new ArrayList<>();
@@ -76,9 +86,7 @@ public class RsyncSynchronizer {
 			commandBuilder.buildTestCommand().start();
 			logger.info("Rsync presence test successful");
 		} catch (Exception e) {
-			// logger.warn(
-			// "Could not run test rsync command. Please check that the executable is available.",
-			// e);F
+			logger.warning("Could not run test rsync command. Please check that the executable is available");
 			throw new IllegalStateException("Could not run test rsync command. Please check that the executable is available.", e);
 		}
 	}
