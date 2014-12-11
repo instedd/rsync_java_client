@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.IOException;
 
 import org.apache.commons.lang.StringUtils;
-import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -39,18 +38,26 @@ public class RsyncSynchronizerIntegrationTest {
 
 		synchronizer = new RsyncSynchronizer(new RsyncCommandBuilder(settings));
 	}
-	
+
 	@Test
-  public void canUpload() throws Exception {
-	 synchronizer.setUp();
-	 synchronizer.uploadDocuments();
-	 
-	 fail("unimplemented");
-  }
-	
+	public void canUpload() throws Exception {
+		synchronizer.setUp();
+		synchronizer.uploadDocuments();
+
+		fail("unimplemented");
+	}
+
 	@Test
-  public void firesListeners() throws Exception {
-	  fail("unimplemented");
-  }
+	public void canDownload() throws Exception {
+		synchronizer.setUp();
+		synchronizer.downloadDocuments();
+
+		fail("unimplemented");
+	}
+
+	@Test
+	public void firesListeners() throws Exception {
+		fail("unimplemented");
+	}
 
 }

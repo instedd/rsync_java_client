@@ -31,6 +31,10 @@ public class RsyncSynchronizer {
 	public void uploadDocuments() throws IOException, InterruptedException {
 		this.sync(commandBuilder.buildUploadCommand());
 	}
+	
+	public void downloadDocuments() throws IOException, InterruptedException {
+		this.sync(commandBuilder.buildDownloadCommand());
+	}
 
 	protected synchronized void sync(ProcessBuilder command) throws IOException, InterruptedException {
 		// logger.debug("Running rsync: {}", command.toString());
