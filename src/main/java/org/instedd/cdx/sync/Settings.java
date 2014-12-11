@@ -20,8 +20,8 @@ public class Settings {
 		for (Object f : Arrays.asList(remoteHost, remotePort, remoteKey)) {
 			Validate.notNull(f, "Remote host settings missing (required: host, port, user and path to ssh key");
 		}
-		for (String f : Arrays.asList(inboxLocalDir, outboxLocalDir)) {
-			Validate.notNull(f, "Not all sync paths are configured");
+		if (inboxLocalDir == null  && outboxLocalDir == null) {
+			throw new IllegalArgumentException("either inboxLocalDir or outboxLocalDir must be set");
 		}
 	}
 }
