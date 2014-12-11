@@ -1,6 +1,7 @@
 package org.instedd.cdx.sync;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -33,8 +34,8 @@ public class RsyncSynchronizer {
 		logger.info("Will sync files from ${commandBuilder.inboxRemoteRoute()} to ${commandBuilder.inboxLocalRoute()}");
 	}
 
-	public synchronized void sync(ProcessBuilder command) {
-		logger.debug("Running rsync: {}", command.toString());
+	public synchronized void sync(ProcessBuilder command) throws IOException {
+		// logger.debug("Running rsync: {}", command.toString());
 
 		File errFile = File.createTempFile("sync", "err");
 		File outFile = File.createTempFile("sync", "out");
@@ -52,11 +53,12 @@ public class RsyncSynchronizer {
 		// }
 
 		List<String> transferredFilenames = new ArrayList<>();
-		Scanner s = new Scanner(outFile);
-		while (s.hasNextLine()) {
-			String line = s.nextLine();
-			if (line.startsWith("<")) {
-				transferredFilenames.add(line.split(" ", 2)[1]);
+		try (Scanner s = new Scanner(outFile)) {
+			while (s.hasNextLine()) {
+				String line = s.nextLine();
+				if (line.startsWith("<")) {
+					transferredFilenames.add(line.split(" ", 2)[1]);
+				}
 			}
 		}
 		if (!transferredFilenames.isEmpty()) {
@@ -64,7 +66,7 @@ public class RsyncSynchronizer {
 		}
 	}
 
-	public void uploadDocuments() {
+	public void uploadDocuments()  throws IOException {
 		this.sync(commandBuilder.buildUploadCommand());
 	}
 
@@ -73,9 +75,9 @@ public class RsyncSynchronizer {
 			commandBuilder.buildTestCommand().start();
 			logger.info("Rsync presence test successful");
 		} catch (Exception e) {
-			logger.warn(
-					"Could not run test rsync command. Please check that the executable is available.",
-					e);
+			// logger.warn(
+			// "Could not run test rsync command. Please check that the executable is available.",
+			// e);F
 			throw new IllegalStateException(
 					"Could not run test rsync command. Please check that the executable is available.",
 					e);
