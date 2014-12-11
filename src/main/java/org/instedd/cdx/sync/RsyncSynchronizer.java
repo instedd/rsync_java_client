@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
-import org.apache.ivy.ant.IvyAntSettings.Credentials;
-
 public class RsyncSynchronizer {
 
 	private final Logger logger = Logger.getLogger(RsyncSynchronizer.class.getName());
@@ -34,7 +32,7 @@ public class RsyncSynchronizer {
 		this.sync(commandBuilder.buildUploadCommand());
 	}
 
-	public synchronized void sync(ProcessBuilder command) throws IOException, InterruptedException {
+	protected synchronized void sync(ProcessBuilder command) throws IOException, InterruptedException {
 		// logger.debug("Running rsync: {}", command.toString());
 
 		File errFile = File.createTempFile("sync", "err");
