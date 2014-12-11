@@ -8,6 +8,7 @@ import org.apache.commons.lang.SystemUtils;
 
 public class RsyncCommandBuilder {
 
+	private static final String RSYNC_COMMAND = "rsync";
 	private Settings settings;
 
 	public RsyncCommandBuilder(Settings settings) {
@@ -20,15 +21,15 @@ public class RsyncCommandBuilder {
 	}
 
 	public ProcessBuilder buildUploadCommand() {
-		return process("rsync", "-iaz", "--remove-source-files", "-e", shellCommand(), getOutboxLocalRoute(), getOutboxRemoteRoute());
+		return process(RSYNC_COMMAND, "-iaz", "--remove-source-files", "-e", shellCommand(), getOutboxLocalRoute(), getOutboxRemoteRoute());
 	}
 
 	public ProcessBuilder buildDownloadCommand() {
-		return process("rsync", "-iaz", "--remove-source-files", "-e", shellCommand(), getInboxRemoteRoute(), getInboxLocalRoute());
+		return process(RSYNC_COMMAND, "-iaz", "--remove-source-files", "-e", shellCommand(), getInboxRemoteRoute(), getInboxLocalRoute());
 	}
 
 	public ProcessBuilder buildTestCommand() {
-		return process("rsync --help");
+		return process(RSYNC_COMMAND, "--help");
 	}
 
 	public String getOutboxLocalRoute() {
