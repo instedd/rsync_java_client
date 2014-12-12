@@ -4,7 +4,11 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.apache.commons.lang.SystemUtils;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -17,46 +21,105 @@ public class RsyncSynchronizerIntegrationTest {
 	private Settings settings;
 	private RsyncSynchronizer synchronizer;
 
+	private File remoteInbox;
+	private File remoteOutbox;
+
+	private File localInbox;
+	private File localOutbox;
+
 	@Before
 	public void setUp() throws IOException {
-		File inbox = root.newFolder();
-		File anInboxFile = new File(inbox, "foo");
+		localInbox = root.newFolder();
+		localOutbox = root.newFolder();
 
-		File outbox = root.newFolder();
+		remoteInbox = root.newFolder();
+		remoteOutbox = root.newFolder();
+
 		settings = new Settings() {
 			{
 				remoteHost = "localhost";
-				remotePort = 22;
-				remoteUser = "user";
-				remoteKey = "todo";
+				remoteUser = SystemUtils.USER_NAME;
+
+				inboxLocalDir = localInbox.getAbsolutePath();
+				outboxLocalDir = localOutbox.getAbsolutePath();
+
+				outboxRemoteDir = remoteOutbox.getAbsolutePath();
+				inboxRemoteDir = remoteInbox.getAbsolutePath();
 			}
 		};
-
-		settings.inboxLocalDir = inbox.getAbsolutePath();
-		settings.outboxLocalDir = outbox.getAbsolutePath();
 
 		synchronizer = new RsyncSynchronizer(new RsyncCommandBuilder(settings));
 	}
 
 	@Test
 	public void canUpload() throws Exception {
+		File a = createTestFileInto(localOutbox);
+		File remoteCopy = createTestFileInto(remoteInbox);
+
+		a.createNewFile();
+
+		assertTrue(a.exists());
+		assertFalse(remoteCopy.exists());
+
 		synchronizer.setUp();
 		synchronizer.uploadDocuments();
 
-		fail("unimplemented");
+		assertFalse(a.exists());
+		assertTrue(remoteCopy.exists());
 	}
 
 	@Test
 	public void canDownload() throws Exception {
+		File a = createTestFileInto(remoteOutbox);
+		File localCopy = createTestFileInto(localInbox);
+
+		a.createNewFile();
+
+		assertTrue(a.exists());
+		assertFalse(localCopy.exists());
+
 		synchronizer.setUp();
 		synchronizer.downloadDocuments();
 
-		fail("unimplemented");
+		assertFalse(a.exists());
+		assertTrue(localCopy.exists());
 	}
 
 	@Test
-	public void firesListeners() throws Exception {
-		fail("unimplemented");
+	public void firesListenersOnDownload() throws Exception {
+		File a = createTestFileInto(remoteOutbox);
+		a.createNewFile();
+
+		AtomicBoolean eventProperlyFired = setupSynchronizerWithListener();
+		synchronizer.downloadDocuments();
+
+		assertTrue(eventProperlyFired.get());
 	}
 
+	@Test
+	public void firesListenersOnUpload() throws Exception {
+		File a = createTestFileInto(localOutbox);
+		a.createNewFile();
+
+		AtomicBoolean eventProperlyFired = setupSynchronizerWithListener();
+		synchronizer.uploadDocuments();
+
+		assertTrue(eventProperlyFired.get());
+	}
+
+	private AtomicBoolean setupSynchronizerWithListener() {
+	  synchronizer.setUp();
+		final AtomicBoolean eventProperlyFired = new AtomicBoolean(false);
+		synchronizer.addListener(new RsyncSynchronizerListener() {
+			public void onFilesTransfered(List<String> transferredFilenames) {
+				eventProperlyFired.set(transferredFilenames.equals(Arrays.asList("sample")));
+			}
+		});
+	  return eventProperlyFired;
+  }
+
+
+	private File createTestFileInto(File directory) {
+		return new File(directory, "sample");
+	}
 }

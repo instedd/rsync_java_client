@@ -37,6 +37,10 @@ public class RsyncSynchronizer {
 		this.sync(commandBuilder.buildDownloadCommand());
 	}
 
+	public void addListener(RsyncSynchronizerListener listener) {
+		listeners.add(listener);
+  }
+	
 	protected synchronized void sync(ProcessBuilder command) throws IOException {
 		File errFile = null, outFile = null;
 		try {
@@ -72,7 +76,7 @@ public class RsyncSynchronizer {
 		try (Scanner s = new Scanner(outFile)) {
 			while (s.hasNextLine()) {
 				String line = s.nextLine();
-				if (line.startsWith("<")) {
+				if (line.startsWith("<") || line.startsWith(">")) {
 					transferredFilenames.add(line.split(" ", 2)[1]);
 				}
 			}
