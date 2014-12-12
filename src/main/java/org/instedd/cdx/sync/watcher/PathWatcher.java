@@ -3,7 +3,6 @@ package org.instedd.cdx.sync.watcher;
 import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
 import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.WatchEvent;
@@ -35,9 +34,9 @@ public class PathWatcher {
 			WatchKey key;
 			while ((key = watcher.take()) != null) {
 				for (WatchEvent<?> event : key.pollEvents()) {
-					listener.fileChanged((Kind<File>) event.kind(), (File) event.context());
+					listener.onSinglePathChange((Kind<Path>) event.kind(), (Path) event.context());
 				}
-				listener.pathChanged(path);
+				listener.onGlobalPathChange(path);
 				key.reset();
 			}
 		} catch (InterruptedException e) {

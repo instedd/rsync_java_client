@@ -1,7 +1,7 @@
 package org.instedd.cdx.sync.watcher;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.WatchEvent.Kind;
 import java.util.logging.Logger;
 
@@ -20,11 +20,11 @@ public class RsyncUploadWatchListener implements PathWatchListener {
 	}
 
 	@Override
-	public void fileChanged(Kind<File> kind, File context) {
+	public void onSinglePathChange(Kind<Path> kind, Path context) {
 		logger.info("File change event " + kind + " for file " + context);
 	}
 
-	public void pathChanged(java.nio.file.Path path) {
+	public void onGlobalPathChange(java.nio.file.Path path) {
 		try {
 			mode.doSync(synchronizer);
 		} catch (IOException e) {

@@ -1,8 +1,9 @@
 package org.instedd.cdx.sync;
 
+import static org.apache.commons.lang.SystemUtils.USER_HOME;
+
 import java.util.Arrays;
 
-import org.apache.commons.lang.SystemUtils;
 import org.apache.commons.lang.Validate;
 
 public class Settings {
@@ -30,7 +31,7 @@ public class Settings {
 	 * Defaults to ~/.ssh/id_rsa
 	 */
 	//TODO where is located on Windows by default?
-	public String remoteKey = SystemUtils.USER_HOME + "/.ssh/id_rsa";
+	public String remoteKey = USER_HOME + "/.ssh/id_rsa";
 	public String serverSignatureLocation;
 	public String knownHostsFilePath;
 
