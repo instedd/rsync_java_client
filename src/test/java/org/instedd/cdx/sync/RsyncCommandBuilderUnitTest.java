@@ -24,8 +24,8 @@ public class RsyncCommandBuilderUnitTest {
 			}
 		};
 
-		settings.inboxLocalDir = "sampleIn";
-		settings.outboxLocalDir = "sampleOut";
+		settings.localInboxDir = "sampleIn";
+		settings.localOutboxDir = "sampleOut";
 
 		builder = new RsyncCommandBuilder(settings);
 	}

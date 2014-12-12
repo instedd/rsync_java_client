@@ -28,12 +28,12 @@ public class RsyncSynchronizer {
 	}
 
 	public void uploadDocuments() throws IOException {
-		logger.info("Will sync files from " + commandBuilder.getOutboxLocalRoute() + " to " + commandBuilder.getOutboxRemoteRoute() + "");
+		logger.info("Will sync files from " + commandBuilder.getLocalOutboxPath() + " to " + commandBuilder.getRemoteInboxPath() + "");
 		this.sync(commandBuilder.buildUploadCommand());
 	}
 
 	public void downloadDocuments() throws IOException {
-		logger.info("Will sync files from " + commandBuilder.getInboxRemoteRoute() + " to " + commandBuilder.getInboxLocalRoute() + "");
+		logger.info("Will sync files from " + commandBuilder.getRemoteOutboxPath() + " to " + commandBuilder.getLocalInboxPath() + "");
 		this.sync(commandBuilder.buildDownloadCommand());
 	}
 

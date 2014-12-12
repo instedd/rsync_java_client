@@ -21,32 +21,32 @@ public class RsyncCommandBuilder {
 	}
 
 	public ProcessBuilder buildUploadCommand() {
-		return process(RSYNC_COMMAND, "-iaz", "--remove-source-files", "-e", shellCommand(), getOutboxLocalRoute(), getOutboxRemoteRoute());
+		return process(RSYNC_COMMAND, "-iaz", "--remove-source-files", "-e", shellCommand(), getLocalOutboxPath(), getRemoteInboxPath());
 	}
 
 	public ProcessBuilder buildDownloadCommand() {
-		return process(RSYNC_COMMAND, "-iaz", "--remove-source-files", "-e", shellCommand(), getInboxRemoteRoute(), getInboxLocalRoute());
+		return process(RSYNC_COMMAND, "-iaz", "--remove-source-files", "-e", shellCommand(), getRemoteOutboxPath(), getLocalInboxPath());
 	}
 
 	public ProcessBuilder buildTestCommand() {
 		return process(RSYNC_COMMAND, "--help");
 	}
 
-	public String getOutboxLocalRoute() {
-		return localRoute(settings.outboxLocalDir);
+	public String getLocalOutboxPath() {
+		return localPath(settings.localOutboxDir);
 	}
 
-	public String getOutboxRemoteRoute() {
-		return "" + settings.remoteHost + ":" + settings.inboxRemoteDir;
+	public String getRemoteInboxPath() {
+		return "" + settings.remoteHost + ":" + settings.remoteInboxDir;
 	}
 
-	public String getInboxLocalRoute() {
-		return localRoute(settings.inboxLocalDir);
+	public String getLocalInboxPath() {
+		return localPath(settings.localInboxDir);
 	}
 
-	public String getInboxRemoteRoute() {
+	public String getRemoteOutboxPath() {
 		// trailing slash prevents an 'outbox' directory to be created
-		return "" + settings.remoteHost + ":" + settings.outboxRemoteDir +"/";
+		return "" + settings.remoteHost + ":" + settings.remoteOutboxDir +"/";
 	}
 
 	public String shellCommand() {
@@ -56,7 +56,7 @@ public class RsyncCommandBuilder {
 		    + " -oBatchMode=yes";
 	}
 
-	String localRoute(String dir) {
+	String localPath(String dir) {
 		dir = dir.endsWith("/") ? dir : "" + dir + "/";
 		return cygwinPath(dir);
 	}
@@ -72,6 +72,6 @@ public class RsyncCommandBuilder {
 	}
 
 	public String getOutboxLocalDir() {
-		return settings.outboxLocalDir;
+		return settings.localOutboxDir;
 	}
 }

@@ -40,11 +40,11 @@ public class RsyncSynchronizerIntegrationTest {
 				remoteHost = "localhost";
 				remoteUser = SystemUtils.USER_NAME;
 
-				inboxLocalDir = localInbox.getAbsolutePath();
-				outboxLocalDir = localOutbox.getAbsolutePath();
+				localInboxDir = localInbox.getAbsolutePath();
+				localOutboxDir = localOutbox.getAbsolutePath();
 
-				outboxRemoteDir = remoteOutbox.getAbsolutePath();
-				inboxRemoteDir = remoteInbox.getAbsolutePath();
+				remoteOutboxDir = remoteOutbox.getAbsolutePath();
+				remoteInboxDir = remoteInbox.getAbsolutePath();
 			}
 		};
 

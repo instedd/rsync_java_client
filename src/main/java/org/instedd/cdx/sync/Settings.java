@@ -38,7 +38,7 @@ public class Settings {
 	 * Client directory where files transferred from server to client will be placed
 	 * after download
 	 */
-	public String inboxLocalDir;
+	public String localInboxDir;
 
 	/**
 	 * Client directory where files transferred from client to server must be placed
@@ -46,13 +46,13 @@ public class Settings {
 	 *
 	 * If you want to transfer a file to server, put it here.
 	 */
-	public String outboxLocalDir;
+	public String localOutboxDir;
 
 	/**
 	 * Server directory where files transferred from client to server will be placed
 	 * after upload
 	 */
-	public String inboxRemoteDir = "/inbox";
+	public String remoteInboxDir = "/inbox";
 
 	/**
 	 * Server directory where files transferred from server to client must be placed
@@ -60,13 +60,13 @@ public class Settings {
 	 *
 	 * If you want to transfer a file to client, put it here
 	 */
-	public String outboxRemoteDir = "/outbox";
+	public String remoteOutboxDir = "/outbox";
 
 	public void validate() {
 		for (Object f : Arrays.asList(remoteHost, remotePort, remoteKey)) {
 			Validate.notNull(f, "Remote host settings missing (required: host, port, user and path to ssh key");
 		}
-		if (inboxLocalDir == null  && outboxLocalDir == null) {
+		if (localInboxDir == null  && localOutboxDir == null) {
 			throw new IllegalArgumentException("either inboxLocalDir or outboxLocalDir must be set");
 		}
 	}
