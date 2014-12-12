@@ -40,7 +40,7 @@ public class RsyncUploadWatchListener implements PathWatchListener {
 		},
 		UPLOAD {
 			public void doSync(RsyncSynchronizer synchronizer) throws IOException {
-				synchronizer.downloadDocuments();
+				synchronizer.uploadDocuments();
 			}
 		},
 		FULL {
