@@ -25,7 +25,7 @@ public class RsyncCommandBuilderUnitTest {
 			}
 		};
 
-		settings.inboxLocalDir = "sampleIns";
+		settings.inboxLocalDir = "sampleIn";
 		settings.outboxLocalDir = "sampleOut";
 
 		builder = new RsyncCommandBuilder(settings);
@@ -33,7 +33,7 @@ public class RsyncCommandBuilderUnitTest {
 
 	@Test
 	public void canBuildDownload() {
-		assertCommandLike("rsync -iaz --remove-source-files -e ssh -p 22 -l user -i \"todo\"  -oBatchMode=yes localhost:/outbox/",
+		assertCommandLike("rsync -iaz --remove-source-files -e ssh -p 22 -l user -i \"todo\"  -oBatchMode=yes localhost:/outbox/ sampleIn/",
 		    builder.buildDownloadCommand());
 	}
 
@@ -44,10 +44,10 @@ public class RsyncCommandBuilderUnitTest {
 
 	@Test
 	public void canBuildUpload() throws Exception {
-		assertCommandLike("rsync -iaz --remove-source-files -e ssh -p 22 -l user -i \"todo\"  -oBatchMode=yes", builder.buildUploadCommand());
+		assertCommandLike("rsync -iaz --remove-source-files -e ssh -p 22 -l user -i \"todo\"  -oBatchMode=yes sampleOut/ localhost:/inbox", builder.buildUploadCommand());
 	}
 
-	private void assertCommandLike(String string, ProcessBuilder buildUploadCommand) {
-		assertThat(StringUtils.join(buildUploadCommand.command(), " "), CoreMatchers.containsString(string));
+	private void assertCommandLike(String string, ProcessBuilder command) {
+		assertEquals(string, StringUtils.join(command.command(), " "));
 	}
 }
