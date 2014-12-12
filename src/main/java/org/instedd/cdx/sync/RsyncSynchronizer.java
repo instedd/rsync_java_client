@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
-import org.apache.bsf.util.IOUtils;
 import org.apache.commons.io.FileUtils;
 
 public class RsyncSynchronizer {

@@ -6,15 +6,27 @@ import org.apache.commons.lang.Validate;
 
 public class Settings {
 
+	/**
+	 * The host to connect to
+	 */
 	public String remoteHost;
+	/**
+	 * The port where the host accepts ssh connections
+	 */
 	public Integer remotePort;
+	/**
+	 * The username to log into the remote host
+	 */
 	public String remoteUser;
+	/**
+	 * The private ssh key used to log into the remote host
+	 */
 	public String remoteKey;
-	public String userServerSignature;
 	public String serverSignatureLocation;
+	public String knownHostsFilePath;
+
 	public String inboxLocalDir;
 	public String outboxLocalDir;
-	public String knownHostsFilePath;
 
 	public void validate() {
 		for (Object f : Arrays.asList(remoteHost, remotePort, remoteKey)) {
