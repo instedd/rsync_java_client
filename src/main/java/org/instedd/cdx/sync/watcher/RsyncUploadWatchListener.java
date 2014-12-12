@@ -11,10 +11,12 @@ import org.instedd.cdx.sync.RsyncSynchronizer;
 public class RsyncUploadWatchListener implements PathWatchListener {
 
 	private static final Logger logger = Logger.getLogger(PathWatcher.class.getName());
-	private RsyncSynchronizer syncronizer;
+	private RsyncSynchronizer synchronizer;
+	private SyncMode mode;
 
-	public RsyncUploadWatchListener(RsyncSynchronizer synchronizer) {
-		this.syncronizer = synchronizer;
+	public RsyncUploadWatchListener(RsyncSynchronizer synchronizer, SyncMode mode) {
+		this.synchronizer = synchronizer;
+		this.mode = mode;
 	}
 
 	@Override
@@ -24,10 +26,31 @@ public class RsyncUploadWatchListener implements PathWatchListener {
 
 	public void pathChanged(java.nio.file.Path path) {
 		try {
-			syncronizer.downloadDocuments();
+			mode.doSync(synchronizer);
 		} catch (IOException e) {
 			throw new UnhandledException(e);
 		}
+	}
+
+	public enum SyncMode {
+		DOWNLOAD {
+			public void doSync(RsyncSynchronizer synchronizer) throws IOException {
+				synchronizer.downloadDocuments();
+			}
+		},
+		UPLOAD {
+			public void doSync(RsyncSynchronizer synchronizer) throws IOException {
+				synchronizer.downloadDocuments();
+			}
+		},
+		FULL {
+			public void doSync(RsyncSynchronizer synchronizer) throws IOException {
+				DOWNLOAD.doSync(synchronizer);
+				UPLOAD.doSync(synchronizer);
+			}
+		};
+		public abstract void doSync(RsyncSynchronizer synchronizer) throws IOException;
+
 	}
 
 }
