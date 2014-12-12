@@ -37,7 +37,7 @@ public class RsyncCommandBuilder {
 	}
 
 	public String getOutboxRemoteRoute() {
-		return "" + settings.remoteHost + ":/inbox";
+		return "" + settings.remoteHost + ":" + settings.inboxRemoteDir;
 	}
 
 	public String getInboxLocalRoute() {
@@ -46,7 +46,7 @@ public class RsyncCommandBuilder {
 
 	public String getInboxRemoteRoute() {
 		// trailing slash prevents an 'outbox' directory to be created
-		return "" + settings.remoteHost + ":/outbox/";
+		return "" + settings.remoteHost + ":" + settings.outboxRemoteDir +"/";
 	}
 
 	public String shellCommand() {
