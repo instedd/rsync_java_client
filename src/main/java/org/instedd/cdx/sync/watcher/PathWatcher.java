@@ -14,7 +14,7 @@ import org.apache.commons.lang.UnhandledException;
 
 public class PathWatcher {
 
-	public static Runnable asyncWatch(final Path path, final PathWatchListener listener) throws Exception {
+	public static Runnable asyncWatch(final Path path, final PathWatchListener listener) {
 		return new Runnable() {
 			public void run() {
 				try {
