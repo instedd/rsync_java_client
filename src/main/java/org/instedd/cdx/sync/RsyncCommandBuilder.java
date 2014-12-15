@@ -56,7 +56,7 @@ public class RsyncCommandBuilder {
 		    + " -oBatchMode=yes";
 	}
 
-	String localPath(String dir) {
+	protected String localPath(String dir) {
 		dir = dir.endsWith("/") ? dir : "" + dir + "/";
 		return cygwinPath(dir);
 	}
