@@ -1,4 +1,4 @@
-package org.instedd.cdx.sync.tray;
+package org.instedd.cdx.sync.app;
 
 import java.awt.MenuItem;
 import java.awt.PopupMenu;
@@ -9,6 +9,8 @@ import java.nio.file.Paths;
 import org.instedd.cdx.sync.RsyncCommandBuilder;
 import org.instedd.cdx.sync.RsyncSynchronizer;
 import org.instedd.cdx.sync.Settings;
+import org.instedd.cdx.sync.tray.PopupMenuConfigurer;
+import org.instedd.cdx.sync.tray.SystemTrays;
 import org.instedd.cdx.sync.watcher.PathWatcher;
 import org.instedd.cdx.sync.watcher.RsyncUploadWatchListener;
 import org.instedd.cdx.sync.watcher.RsyncUploadWatchListener.SyncMode;
