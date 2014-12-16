@@ -36,6 +36,9 @@
 						</goals>
 					</execution>
 				</executions>
+				<configuration>
+					<target>1.7</target>
+				</configuration>
 			</plugin>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
