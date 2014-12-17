@@ -39,7 +39,7 @@ public class PathWatcherIntegrationTest {
 		touch("bar");
 		touch("baz");
 
-		Thread.sleep(10000);
+		Thread.sleep(60000);
 		thread.interrupt();
 		thread.join();
 
