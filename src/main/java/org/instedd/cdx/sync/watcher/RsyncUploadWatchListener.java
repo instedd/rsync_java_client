@@ -5,7 +5,7 @@ import java.nio.file.Path;
 import java.nio.file.WatchEvent.Kind;
 import java.util.logging.Logger;
 
-import org.apache.commons.lang.UnhandledException;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.instedd.cdx.sync.RsyncSynchronizer;
 
 public class RsyncUploadWatchListener implements PathWatchListener {
@@ -27,8 +27,8 @@ public class RsyncUploadWatchListener implements PathWatchListener {
 	public void onGlobalPathChange(java.nio.file.Path path) {
 		try {
 			mode.doSync(synchronizer);
-		} catch (IOException e) {
-			throw new UnhandledException(e);
+		} catch (Exception e) {
+			logger.warning("Exception thrown " + ExceptionUtils.getStackTrace(e));
 		}
 	}
 
