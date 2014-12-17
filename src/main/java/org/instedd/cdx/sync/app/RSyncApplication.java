@@ -24,6 +24,7 @@ public class RSyncApplication {
 
 	private transient Thread thread;
 
+	//TODO extract parameter object
 	public RSyncApplication(Settings settings, String tooltip, String imageFilename, SyncMode syncMode) {
 		this.settings = settings;
 		this.tooltip = tooltip;
@@ -33,6 +34,7 @@ public class RSyncApplication {
 
 	public void start() {
 		RsyncSynchronizer synchronizer = newSynchronizer();
+		//TODO log sync mode
 		Runnable asyncWatch = PathWatcher.asyncWatch(Paths.get(settings.localOutboxDir), new RsyncWatchListener(synchronizer, syncMode));
 		thread = new Thread(asyncWatch);
 

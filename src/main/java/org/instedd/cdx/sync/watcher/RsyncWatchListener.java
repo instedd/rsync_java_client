@@ -26,12 +26,14 @@ public class RsyncWatchListener implements PathWatchListener {
 
 	public void onGlobalPathChange(Path path) {
 		try {
+			//TODO exception handling should be done by PathWatch component, in order
+			//to avoid boilerplate here and avoid crashing in case programmer forgets try-catches
 			mode.doSync(synchronizer);
 		} catch (Exception e) {
 			logger.warning("Exception thrown " + ExceptionUtils.getStackTrace(e));
 		}
 	}
-
+//TODO move to general sync code
 	public enum SyncMode {
 		DOWNLOAD {
 			public void doSync(RsyncSynchronizer synchronizer) throws IOException {

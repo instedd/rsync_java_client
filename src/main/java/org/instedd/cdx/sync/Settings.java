@@ -66,7 +66,7 @@ public class Settings {
 	public void validate() {
 		for (Object f : Arrays.asList(remoteHost, remotePort, remoteKey)) {
 			Validate.notNull(f, "Remote host settings missing (required: host, port, user and path to ssh key");
-		}
+		}//TODO this validation depends on sync mode
 		if (localInboxDir == null  && localOutboxDir == null) {
 			throw new IllegalArgumentException("either inboxLocalDir or outboxLocalDir must be set");
 		}

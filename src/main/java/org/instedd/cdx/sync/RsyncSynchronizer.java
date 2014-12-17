@@ -40,10 +40,11 @@ public class RsyncSynchronizer {
 	public void addListener(RsyncSynchronizerListener listener) {
 		listeners.add(listener);
   }
-	
+
 	protected synchronized void sync(ProcessBuilder command) throws IOException {
 		File errFile = null, outFile = null;
 		try {
+			//TODO write to buffer instead of file
 			errFile = File.createTempFile("sync", "err");
 			outFile = File.createTempFile("sync", "out");
 
@@ -65,7 +66,7 @@ public class RsyncSynchronizer {
 	    process.waitFor();
     } catch (InterruptedException e) {
     	logger.info("Command aborted");
-    } 
+    }
 	  // TODO do in background
 	  logger.info("Proces exited with value " + process.exitValue());
 	  logger.info("Stderr was " + FileUtils.readFileToString(errFile));
