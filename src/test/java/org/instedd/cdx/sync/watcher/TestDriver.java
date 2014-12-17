@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 import org.instedd.cdx.sync.Settings;
 import org.instedd.cdx.sync.app.RSyncApplication;
-import org.instedd.cdx.sync.watcher.RsyncUploadWatchListener.SyncMode;
+import org.instedd.cdx.sync.watcher.RsyncWatchListener.SyncMode;
 
 public class TestDriver {
 

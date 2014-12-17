@@ -12,8 +12,8 @@ import org.instedd.cdx.sync.Settings;
 import org.instedd.cdx.sync.tray.PopupMenuConfigurer;
 import org.instedd.cdx.sync.tray.SystemTrays;
 import org.instedd.cdx.sync.watcher.PathWatcher;
-import org.instedd.cdx.sync.watcher.RsyncUploadWatchListener;
-import org.instedd.cdx.sync.watcher.RsyncUploadWatchListener.SyncMode;
+import org.instedd.cdx.sync.watcher.RsyncWatchListener;
+import org.instedd.cdx.sync.watcher.RsyncWatchListener.SyncMode;
 
 public class RSyncApplication {
 
@@ -33,7 +33,7 @@ public class RSyncApplication {
 
 	public void start() {
 		RsyncSynchronizer synchronizer = newSynchronizer();
-		Runnable asyncWatch = PathWatcher.asyncWatch(Paths.get(settings.localOutboxDir), new RsyncUploadWatchListener(synchronizer, syncMode));
+		Runnable asyncWatch = PathWatcher.asyncWatch(Paths.get(settings.localOutboxDir), new RsyncWatchListener(synchronizer, syncMode));
 		thread = new Thread(asyncWatch);
 
 		SystemTrays.open(tooltip, imageFilename, new PopupMenuConfigurer() {

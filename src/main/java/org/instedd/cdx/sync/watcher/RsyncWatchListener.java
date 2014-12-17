@@ -8,13 +8,13 @@ import java.util.logging.Logger;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.instedd.cdx.sync.RsyncSynchronizer;
 
-public class RsyncUploadWatchListener implements PathWatchListener {
+public class RsyncWatchListener implements PathWatchListener {
 
 	private static final Logger logger = Logger.getLogger(PathWatcher.class.getName());
 	private RsyncSynchronizer synchronizer;
 	private SyncMode mode;
 
-	public RsyncUploadWatchListener(RsyncSynchronizer synchronizer, SyncMode mode) {
+	public RsyncWatchListener(RsyncSynchronizer synchronizer, SyncMode mode) {
 		this.synchronizer = synchronizer;
 		this.mode = mode;
 	}
@@ -24,7 +24,7 @@ public class RsyncUploadWatchListener implements PathWatchListener {
 		logger.info("File change event " + kind + " for file " + context);
 	}
 
-	public void onGlobalPathChange(java.nio.file.Path path) {
+	public void onGlobalPathChange(Path path) {
 		try {
 			mode.doSync(synchronizer);
 		} catch (Exception e) {
