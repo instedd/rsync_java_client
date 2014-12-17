@@ -3,11 +3,8 @@ package org.instedd.cdx.sync.watcher;
 import static org.apache.commons.lang.SystemUtils.USER_HOME;
 import static org.apache.commons.lang.SystemUtils.USER_NAME;
 
-import java.nio.file.Paths;
-
-import org.instedd.cdx.sync.RsyncCommandBuilder;
-import org.instedd.cdx.sync.RsyncSynchronizer;
 import org.instedd.cdx.sync.Settings;
+import org.instedd.cdx.sync.app.RSyncApplication;
 import org.instedd.cdx.sync.watcher.RsyncUploadWatchListener.SyncMode;
 
 public class TestDriver {
@@ -23,18 +20,11 @@ public class TestDriver {
 			}
 		};
 
+		RSyncApplication app = new RSyncApplication(settings, "cdx-rsync-app" , "", SyncMode.UPLOAD);
+		app.start();
 
-		RsyncCommandBuilder commandBuilder = new RsyncCommandBuilder(settings );
-		RsyncSynchronizer synchronizer = new RsyncSynchronizer(commandBuilder);
-		synchronizer.setUp();
+		System.out.println("Now go and create or edit some files on ~/tmp/A");
 
-		Runnable asyncWatch = PathWatcher.asyncWatch(Paths.get(settings.localOutboxDir), new RsyncUploadWatchListener(synchronizer, SyncMode.UPLOAD));
-
-		Thread thread = new Thread(asyncWatch);
-		thread.start();
-		thread.join();
-
-
+		app.stop();
   }
-
 }

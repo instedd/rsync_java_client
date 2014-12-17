@@ -17,22 +17,24 @@ import org.instedd.cdx.sync.watcher.RsyncUploadWatchListener.SyncMode;
 
 public class RSyncApplication {
 
-	private Settings settings;
-	private String tooltip;
-	private String imageFilename;
+	private final Settings settings;
+	private final String tooltip;
+	private final String imageFilename;
+	private final SyncMode syncMode;
 
-	public RSyncApplication(Settings settings, String tooltip, String imageFilename) {
+	private transient Thread thread;
+
+	public RSyncApplication(Settings settings, String tooltip, String imageFilename, SyncMode syncMode) {
 		this.settings = settings;
 		this.tooltip = tooltip;
 		this.imageFilename = imageFilename;
+		this.syncMode = syncMode;
 	}
 
 	public void start() {
-		RsyncCommandBuilder commandBuilder = new RsyncCommandBuilder(settings);
-		RsyncSynchronizer synchronizer = new RsyncSynchronizer(commandBuilder);
-
-		Runnable asyncWatch = PathWatcher.asyncWatch(Paths.get(settings.localOutboxDir), new RsyncUploadWatchListener(synchronizer, SyncMode.UPLOAD));
-		final Thread thread = new Thread(asyncWatch);
+		RsyncSynchronizer synchronizer = newSynchronizer();
+		Runnable asyncWatch = PathWatcher.asyncWatch(Paths.get(settings.localOutboxDir), new RsyncUploadWatchListener(synchronizer, syncMode));
+		thread = new Thread(asyncWatch);
 
 		SystemTrays.open(tooltip, imageFilename, new PopupMenuConfigurer() {
 			public void configure(PopupMenu menu) {
@@ -48,5 +50,17 @@ public class RSyncApplication {
 		synchronizer.setUp();
 		thread.start();
 	}
+
+	public void stop() throws InterruptedException {
+		thread.interrupt();
+		thread.join();
+	}
+
+	protected RsyncSynchronizer newSynchronizer() {
+		RsyncCommandBuilder commandBuilder = new RsyncCommandBuilder(settings);
+		RsyncSynchronizer synchronizer = new RsyncSynchronizer(commandBuilder);
+		return synchronizer;
+	}
+
 
 }
