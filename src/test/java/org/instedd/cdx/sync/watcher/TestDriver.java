@@ -22,7 +22,7 @@ public class TestDriver {
 			}
 		};
 
-		RSyncApplication app = new RSyncApplication(settings, "cdx-rsync-app", null, SyncMode.FULL);
+		RSyncApplication app = new RSyncApplication(settings, "cdx-rsync-app", null, SyncMode.UPLOAD);
 		app.start();
 
 		System.out.println("Now go and create or edit some files on ~/tmp/A");
