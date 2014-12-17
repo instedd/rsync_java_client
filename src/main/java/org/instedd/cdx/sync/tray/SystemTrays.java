@@ -21,7 +21,7 @@ public class SystemTrays {
 		PopupMenu menu = new PopupMenu(tooltip);
 		configurer.configure(menu);
 		try {
-			tray.add(createIcon(tooltip, imageFilename, menu , toolkit));
+			if(imageFilename != null) tray.add(createIcon(tooltip, imageFilename, menu , toolkit));
     } catch (AWTException e) {
 	    throw new UnhandledException(e);
     }
