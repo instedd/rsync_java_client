@@ -1,8 +1,6 @@
 package org.instedd.cdx.sync.watcher;
 
 import static org.apache.commons.lang.SystemUtils.USER_HOME;
-import static org.apache.commons.lang.SystemUtils.USER_NAME;
-
 import java.util.Scanner;
 
 import org.instedd.cdx.sync.Settings;
@@ -15,10 +13,11 @@ public class TestDriver {
 		Settings settings = new Settings() {
 			{
 				remoteHost = "localhost";
-				remoteUser = USER_NAME;
+				remoteUser = "cdx-sync";
+				remotePort = 2222;
 
 				localOutboxDir = USER_HOME + "/tmp/A";
-				remoteInboxDir = USER_HOME + "/tmp/B";
+				remoteInboxDir = "sync/"+"2f480eb6-0130-7b72-374c-d689b42ff541"+"/inbox";
 			}
 		};
 
