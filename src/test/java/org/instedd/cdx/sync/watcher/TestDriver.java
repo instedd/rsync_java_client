@@ -1,6 +1,6 @@
 package org.instedd.cdx.sync.watcher;
 
-import static org.apache.commons.lang.SystemUtils.USER_HOME;
+import java.util.Properties;
 import java.util.Scanner;
 
 import org.instedd.cdx.sync.Settings;
@@ -10,16 +10,11 @@ import org.instedd.cdx.sync.watcher.RsyncWatchListener.SyncMode;
 public class TestDriver {
 
 	public static void main(String[] args) throws Exception {
-		Settings settings = new Settings() {
-			{
-				remoteHost = "localhost";
-				remoteUser = "cdx-sync";
-				remotePort = 2222;
+		Properties properties = new Properties();
+		properties.load(TestDriver.class.getResourceAsStream("/cdxsync.properties"));
+		Settings settings = Settings.fromProperties(properties);
 
-				localOutboxDir = USER_HOME + "/tmp/A";
-				remoteInboxDir = "sync/"+"2f480eb6-0130-7b72-374c-d689b42ff541"+"/inbox";
-			}
-		};
+		System.out.printf("Settings are %s", settings);
 
 		RSyncApplication app = new RSyncApplication(settings, "cdx-rsync-app", null, SyncMode.UPLOAD);
 		app.start();

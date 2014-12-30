@@ -3,8 +3,12 @@ package org.instedd.cdx.sync;
 import static org.apache.commons.lang.SystemUtils.USER_HOME;
 
 import java.util.Arrays;
+import java.util.Properties;
 
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
+import org.apache.commons.lang.builder.ToStringBuilder;
 
 public class Settings {
 
@@ -71,4 +75,33 @@ public class Settings {
 			throw new IllegalArgumentException("either inboxLocalDir or outboxLocalDir must be set");
 		}
 	}
+
+	@Override
+	public String toString() {
+	  return ToStringBuilder.reflectionToString(this);
+	}
+
+	public static Settings fromProperties(final Properties props) {
+		return new Settings() {
+			{
+				remoteHost = extract(props, "remote.host", remoteHost);
+				remotePort = Integer.valueOf(extract(props, "remote.port", remotePort));
+				remoteUser = extract(props, "remote.user", remoteUser);
+				remoteKey = extract(props, "remote.key", remoteKey);
+				serverSignatureLocation = extract(props, "server.signature.location", serverSignatureLocation);
+				knownHostsFilePath = extract(props, "known.hosts.file.path", knownHostsFilePath);
+				localInboxDir = extract(props, "local.inbox.dir", localInboxDir);
+				localOutboxDir = extract(props, "local.outbox.dir", localOutboxDir);
+				remoteInboxDir = extract(props, "remote.inbox.dir", remoteInboxDir);
+				remoteOutboxDir = extract(props, "remote.outbox.dir", remoteOutboxDir);
+			}
+		};
+	}
+
+
+	private static String extract(Properties properties, String key, Object defaultValue) {
+		String value = properties.getProperty("sync." + key);
+		return StringUtils.isEmpty(value) ? ObjectUtils.toString(defaultValue, null) : value;
+	}
+
 }
