@@ -9,7 +9,6 @@ import java.nio.file.WatchEvent.Kind;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.UnhandledException;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -65,14 +64,10 @@ public class PathWatcherIntegrationTest {
         globalChangeEventsCount.incrementAndGet();
       }
 
-      public void onWatchStarted() {
-        try {
+      public void onWatchStarted() throws IOException {
           touch("foo");
           touch("bar");
           touch("baz");
-        } catch (IOException e) {
-          throw new UnhandledException(e);
-        }
       }
     });
   }

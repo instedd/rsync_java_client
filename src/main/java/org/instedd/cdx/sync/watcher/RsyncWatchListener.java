@@ -5,12 +5,11 @@ import java.nio.file.Path;
 import java.nio.file.WatchEvent.Kind;
 import java.util.logging.Logger;
 
-import org.apache.commons.lang.exception.ExceptionUtils;
 import org.instedd.cdx.sync.RsyncSynchronizer;
 
 public class RsyncWatchListener implements PathWatchListener {
 
-  private static final Logger logger = Logger.getLogger(PathWatcher.class.getName());
+  private static final Logger logger = Logger.getLogger(RsyncWatchListener.class.getName());
   private RsyncSynchronizer synchronizer;
   private SyncMode mode;
 
@@ -20,9 +19,9 @@ public class RsyncWatchListener implements PathWatchListener {
   }
 
   @Override
-  public void onWatchStarted() {
+  public void onWatchStarted() throws IOException {
     logger.info("Watch started. Doing initial sync");
-    doSync();
+    mode.doSync(synchronizer);
   }
 
   @Override
@@ -30,20 +29,9 @@ public class RsyncWatchListener implements PathWatchListener {
     logger.info("File change event " + kind + " for file " + context);
   }
 
-  public void onGlobalPathChange(Path path) {
+  public void onGlobalPathChange(Path path) throws IOException {
     logger.info("Path changed. Doing sync");
-    doSync();
-  }
-
-  protected void doSync() {
-    try {
-      // TODO exception handling should be done by PathWatch component, in order
-      // to avoid boilerplate here and avoid crashing in case programmer forgets
-      // try-catches
-      mode.doSync(synchronizer);
-    } catch (Exception e) {
-      logger.warning("Exception thrown " + ExceptionUtils.getStackTrace(e));
-    }
+    mode.doSync(synchronizer);
   }
 
   // TODO move to general sync code

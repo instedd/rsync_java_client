@@ -67,7 +67,6 @@ public class RsyncSynchronizer {
     } catch (InterruptedException e) {
       logger.info("Command aborted");
     }
-    // TODO do in background
     logger.info("Proces exited with value " + process.exitValue());
     logger.info("Stderr was " + FileUtils.readFileToString(errFile));
   }

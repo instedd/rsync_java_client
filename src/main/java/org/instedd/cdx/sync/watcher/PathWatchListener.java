@@ -5,10 +5,10 @@ import java.nio.file.WatchEvent.Kind;
 
 public interface PathWatchListener {
 
-  void onGlobalPathChange(Path path);
+  void onGlobalPathChange(Path path) throws Exception;
 
-  void onSinglePathChange(Kind<Path> kind, Path path);
+  void onSinglePathChange(Kind<Path> kind, Path path) throws Exception;
 
-  void onWatchStarted();
+  void onWatchStarted() throws Exception;
 
 }

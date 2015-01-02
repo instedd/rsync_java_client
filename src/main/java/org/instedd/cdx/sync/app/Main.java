@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.util.Properties;
 import java.util.Scanner;
 
-import org.apache.commons.lang.UnhandledException;
 import org.instedd.cdx.sync.Settings;
 import org.instedd.cdx.sync.watcher.RsyncWatchListener.SyncMode;
 
@@ -41,7 +40,7 @@ public class Main {
         try {
           app.stop();
         } catch (InterruptedException e) {
-          throw new UnhandledException(e);
+          //OK.
         } finally {
           System.out.println("bye!");
         }
