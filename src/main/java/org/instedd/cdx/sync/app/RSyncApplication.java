@@ -53,6 +53,10 @@ public class RSyncApplication {
 		thread.start();
 	}
 
+	public boolean isRunning() {
+		return thread != null && thread.isAlive();
+	}
+
 	public void stop() throws InterruptedException {
 		if (thread != null) {
 			thread.interrupt();

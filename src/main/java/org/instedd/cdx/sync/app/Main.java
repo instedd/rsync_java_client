@@ -31,7 +31,7 @@ public class Main {
 		app.start();
 
 		System.out.printf("Now go and create or edit some files on %s\n", settings.localOutboxDir);
-		loop();
+		loop(app);
 
 	}
 
@@ -49,11 +49,11 @@ public class Main {
 		}));
   }
 
-	protected static void loop() {
+	protected static void loop(RSyncApplication app) {
 		System.out.println("Type bye to stop app, or stop it from the system tray");
 	  @SuppressWarnings("resource")
 		Scanner in = new Scanner(System.in);
-		while (in.hasNextLine()) {
+		while (in.hasNextLine() && app.isRunning()) {
 			if (in.nextLine().equals("bye"))
 				break;
 		}
