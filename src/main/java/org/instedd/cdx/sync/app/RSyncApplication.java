@@ -36,7 +36,7 @@ public class RSyncApplication {
 		RsyncSynchronizer synchronizer = newSynchronizer();
 		//TODO log sync mode
 		Runnable asyncWatch = PathWatcher.asyncWatch(Paths.get(settings.localOutboxDir), new RsyncWatchListener(synchronizer, syncMode));
-		thread = new Thread(asyncWatch);
+		thread = new Thread(asyncWatch, "watcher-thread");
 
 		SystemTrays.open(tooltip, imageFilename, new PopupMenuConfigurer() {
 			public void configure(PopupMenu menu) {
