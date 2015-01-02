@@ -10,62 +10,62 @@ import org.instedd.cdx.sync.RsyncSynchronizer;
 
 public class RsyncWatchListener implements PathWatchListener {
 
-	private static final Logger logger = Logger.getLogger(PathWatcher.class.getName());
-	private RsyncSynchronizer synchronizer;
-	private SyncMode mode;
+  private static final Logger logger = Logger.getLogger(PathWatcher.class.getName());
+  private RsyncSynchronizer synchronizer;
+  private SyncMode mode;
 
-	public RsyncWatchListener(RsyncSynchronizer synchronizer, SyncMode mode) {
-		this.synchronizer = synchronizer;
-		this.mode = mode;
-	}
+  public RsyncWatchListener(RsyncSynchronizer synchronizer, SyncMode mode) {
+    this.synchronizer = synchronizer;
+    this.mode = mode;
+  }
 
-	@Override
-	public void onWatchStarted() {
-		logger.info("Watch started. Doing initial sync");
-		doSync();
-	}
+  @Override
+  public void onWatchStarted() {
+    logger.info("Watch started. Doing initial sync");
+    doSync();
+  }
 
-	@Override
-	public void onSinglePathChange(Kind<Path> kind, Path context) {
-		logger.info("File change event " + kind + " for file " + context);
-	}
+  @Override
+  public void onSinglePathChange(Kind<Path> kind, Path context) {
+    logger.info("File change event " + kind + " for file " + context);
+  }
 
-	public void onGlobalPathChange(Path path) {
-		logger.info("Path changed. Doing sync");
-		doSync();
-	}
+  public void onGlobalPathChange(Path path) {
+    logger.info("Path changed. Doing sync");
+    doSync();
+  }
 
-	protected void doSync() {
-		try {
-			// TODO exception handling should be done by PathWatch component, in order
-			// to avoid boilerplate here and avoid crashing in case programmer forgets
-			// try-catches
-			mode.doSync(synchronizer);
-		} catch (Exception e) {
-			logger.warning("Exception thrown " + ExceptionUtils.getStackTrace(e));
-		}
-	}
+  protected void doSync() {
+    try {
+      // TODO exception handling should be done by PathWatch component, in order
+      // to avoid boilerplate here and avoid crashing in case programmer forgets
+      // try-catches
+      mode.doSync(synchronizer);
+    } catch (Exception e) {
+      logger.warning("Exception thrown " + ExceptionUtils.getStackTrace(e));
+    }
+  }
 
-	// TODO move to general sync code
-	public enum SyncMode {
-		DOWNLOAD {
-			public void doSync(RsyncSynchronizer synchronizer) throws IOException {
-				synchronizer.downloadDocuments();
-			}
-		},
-		UPLOAD {
-			public void doSync(RsyncSynchronizer synchronizer) throws IOException {
-				synchronizer.uploadDocuments();
-			}
-		},
-		FULL {
-			public void doSync(RsyncSynchronizer synchronizer) throws IOException {
-				DOWNLOAD.doSync(synchronizer);
-				UPLOAD.doSync(synchronizer);
-			}
-		};
-		public abstract void doSync(RsyncSynchronizer synchronizer) throws IOException;
+  // TODO move to general sync code
+  public enum SyncMode {
+    DOWNLOAD {
+      public void doSync(RsyncSynchronizer synchronizer) throws IOException {
+        synchronizer.downloadDocuments();
+      }
+    },
+    UPLOAD {
+      public void doSync(RsyncSynchronizer synchronizer) throws IOException {
+        synchronizer.uploadDocuments();
+      }
+    },
+    FULL {
+      public void doSync(RsyncSynchronizer synchronizer) throws IOException {
+        DOWNLOAD.doSync(synchronizer);
+        UPLOAD.doSync(synchronizer);
+      }
+    };
+    public abstract void doSync(RsyncSynchronizer synchronizer) throws IOException;
 
-	}
+  }
 
 }

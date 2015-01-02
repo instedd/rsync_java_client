@@ -4,6 +4,6 @@ import java.awt.PopupMenu;
 
 public interface PopupMenuConfigurer {
 
-	void configure(PopupMenu menu);
+  void configure(PopupMenu menu);
 
 }

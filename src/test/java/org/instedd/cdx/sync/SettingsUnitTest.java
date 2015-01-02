@@ -4,9 +4,9 @@ import org.junit.Test;
 
 public class SettingsUnitTest {
 
-	@Test(expected = IllegalArgumentException.class)
-	public void validatesMissingSettings() {
-		new Settings().validate();
-	}
+  @Test(expected = IllegalArgumentException.class)
+  public void validatesMissingSettings() {
+    new Settings().validate();
+  }
 
 }

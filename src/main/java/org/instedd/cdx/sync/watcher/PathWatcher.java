@@ -14,34 +14,34 @@ import org.apache.commons.lang.UnhandledException;
 
 public class PathWatcher {
 
-	public static Runnable asyncWatch(final Path path, final PathWatchListener listener) {
-		return new Runnable() {
-			public void run() {
-				try {
-					syncWatch(path, listener);
-				} catch (IOException e) {
-					throw new UnhandledException(e);
-				}
-			}
-		};
-	}
+  public static Runnable asyncWatch(final Path path, final PathWatchListener listener) {
+    return new Runnable() {
+      public void run() {
+        try {
+          syncWatch(path, listener);
+        } catch (IOException e) {
+          throw new UnhandledException(e);
+        }
+      }
+    };
+  }
 
-	@SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked")
   public static void syncWatch(Path path, PathWatchListener listener) throws IOException {
-		WatchService watcher = path.getFileSystem().newWatchService();
-		path.register(watcher, ENTRY_CREATE, ENTRY_MODIFY);
-		try {
-			listener.onWatchStarted();
-			WatchKey key;
-			while ((key = watcher.take()) != null) {
-				for (WatchEvent<?> event : key.pollEvents()) {
-					listener.onSinglePathChange((Kind<Path>) event.kind(), (Path) event.context());
-				}
-				listener.onGlobalPathChange(path);
-				key.reset();
-			}
-		} catch (InterruptedException e) {
-			// OK
-		}
-	}
+    WatchService watcher = path.getFileSystem().newWatchService();
+    path.register(watcher, ENTRY_CREATE, ENTRY_MODIFY);
+    try {
+      listener.onWatchStarted();
+      WatchKey key;
+      while ((key = watcher.take()) != null) {
+        for (WatchEvent<?> event : key.pollEvents()) {
+          listener.onSinglePathChange((Kind<Path>) event.kind(), (Path) event.context());
+        }
+        listener.onGlobalPathChange(path);
+        key.reset();
+      }
+    } catch (InterruptedException e) {
+      // OK
+    }
+  }
 }

@@ -17,64 +17,64 @@ import org.junit.rules.TemporaryFolder;
 
 public class PathWatcherIntegrationTest {
 
-	@Rule
-	public TemporaryFolder root = new TemporaryFolder();
-	private AtomicInteger singleChangeEventsCount = new AtomicInteger(0);
-	private AtomicInteger globalChangeEventsCount = new AtomicInteger(0);
-	private File rootDir;
-	private Runnable watch;
+  @Rule
+  public TemporaryFolder root = new TemporaryFolder();
+  private AtomicInteger singleChangeEventsCount = new AtomicInteger(0);
+  private AtomicInteger globalChangeEventsCount = new AtomicInteger(0);
+  private File rootDir;
+  private Runnable watch;
 
-	private Object ready = new Object();
+  private Object ready = new Object();
 
-	@Before
-	public void setup() {
-		rootDir = root.getRoot();
-		watch = createWatcher(rootDir);
-	}
+  @Before
+  public void setup() {
+    rootDir = root.getRoot();
+    watch = createWatcher(rootDir);
+  }
 
-	@Test(timeout = 60000)
-	public void notifiesListenerWhenFileSystemChanges() throws Exception {
-		Thread thread = new Thread(watch);
-		thread.start();
+  @Test(timeout = 60000)
+  public void notifiesListenerWhenFileSystemChanges() throws Exception {
+    Thread thread = new Thread(watch);
+    thread.start();
 
-		synchronized (ready) {
-			ready.wait();
-		}
-		thread.interrupt();
-		thread.join();
+    synchronized (ready) {
+      ready.wait();
+    }
+    thread.interrupt();
+    thread.join();
 
-		assertTrue(globalChangeEventsCount.get() >= 1);
-		assertEquals(3, singleChangeEventsCount.get());
-	}
+    assertTrue(globalChangeEventsCount.get() >= 1);
+    assertEquals(3, singleChangeEventsCount.get());
+  }
 
-	private void touch(String name) throws IOException {
-		FileUtils.touch(new File(rootDir, name));
-	}
+  private void touch(String name) throws IOException {
+    FileUtils.touch(new File(rootDir, name));
+  }
 
-	private Runnable createWatcher(File rootDir) {
-		return PathWatcher.asyncWatch(rootDir.toPath(), new PathWatchListener() {
-			public void onSinglePathChange(Kind<Path> kind, Path path) {
-				if (singleChangeEventsCount.incrementAndGet() >= 3) {
-					synchronized (ready) {
-						ready.notify();
-					}
-				}
-			}
+  private Runnable createWatcher(File rootDir) {
+    return PathWatcher.asyncWatch(rootDir.toPath(), new PathWatchListener() {
+      public void onSinglePathChange(Kind<Path> kind, Path path) {
+        if (singleChangeEventsCount.incrementAndGet() >= 3) {
+          synchronized (ready) {
+            ready.notify();
+          }
+        }
+      }
 
-			public void onGlobalPathChange(Path path) {
-				globalChangeEventsCount.incrementAndGet();
-			}
+      public void onGlobalPathChange(Path path) {
+        globalChangeEventsCount.incrementAndGet();
+      }
 
-			public void onWatchStarted() {
-				try {
-					touch("foo");
-					touch("bar");
-					touch("baz");
-				} catch (IOException e) {
-					throw new UnhandledException(e);
-				}
-			}
-		});
-	}
+      public void onWatchStarted() {
+        try {
+          touch("foo");
+          touch("bar");
+          touch("baz");
+        } catch (IOException e) {
+          throw new UnhandledException(e);
+        }
+      }
+    });
+  }
 
 }
