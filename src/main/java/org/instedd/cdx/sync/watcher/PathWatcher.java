@@ -48,7 +48,7 @@ public class PathWatcher {
         key.reset();
       }
     } catch (InterruptedException e) {
-      // OK. Normal finishing normally
+      // OK. Finishing normally
     } catch (Exception e) {
       throw new UnhandledException(e);
     }
