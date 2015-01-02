@@ -2,6 +2,8 @@ package org.instedd.cdx.sync.watcher;
 
 import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
 import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
+import static org.instedd.cdx.sync.util.Exceptions.interruptable;
+import static org.instedd.cdx.sync.util.Exceptions.unchecked;
 
 import java.nio.file.Path;
 import java.nio.file.WatchEvent;
@@ -10,47 +12,46 @@ import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 import java.util.logging.Logger;
 
-import org.apache.commons.lang.UnhandledException;
 import org.apache.commons.lang.exception.ExceptionUtils;
+import org.instedd.cdx.sync.util.Exceptions.CheckedRunnable;
 
 public class PathWatcher {
 
   private static final Logger logger = Logger.getLogger(PathWatcher.class.getName());
+  private Path path;
+  private PathWatchListener listener;
 
-  public static Runnable asyncWatch(final Path path, final PathWatchListener listener) {
-    return new Runnable() {
-      public void run() {
-        syncWatch(path, listener);
-      }
-    };
+  public PathWatcher(Path path, PathWatchListener listener) {
+    this.path = path;
+    this.listener = listener;
   }
 
-  @SuppressWarnings("unchecked")
-  public static void syncWatch(Path path, PathWatchListener listener) {
-    try {
+  public void watch() {
+    unchecked(() -> {
       WatchService watcher = path.getFileSystem().newWatchService();
       path.register(watcher, ENTRY_CREATE, ENTRY_MODIFY);
       listener.onWatchStarted();
-      WatchKey key;
-      while ((key = watcher.take()) != null) {
-        for (WatchEvent<?> event : key.pollEvents()) {
-          try {
-            listener.onSinglePathChange((Kind<Path>) event.kind(), (Path) event.context());
-          } catch (Exception e) {
-            logger.warning("Exception thrown " + ExceptionUtils.getStackTrace(e));
-          }
-        }
-        try {
-          listener.onGlobalPathChange(path);
-        } catch (Exception e) {
-          logger.warning("Exception thrown " + ExceptionUtils.getStackTrace(e));
-        }
-        key.reset();
+      interruptable(() -> pollEvents(watcher));
+    });
+  }
+
+  @SuppressWarnings("unchecked")
+  protected void pollEvents(WatchService watcher) throws InterruptedException {
+    WatchKey key;
+    while ((key = watcher.take()) != null) {
+      for (WatchEvent<?> event : key.pollEvents()) {
+        warningOnException(() -> listener.onSinglePathChange((Kind<Path>) event.kind(), (Path) event.context()));
       }
-    } catch (InterruptedException e) {
-      // OK. Finishing normally
+      warningOnException(() -> listener.onGlobalPathChange(path));
+      key.reset();
+    }
+  }
+
+  private static void warningOnException(CheckedRunnable runnable) {
+    try {
+      runnable.run();
     } catch (Exception e) {
-      throw new UnhandledException(e);
+      logger.warning("Exception thrown " + ExceptionUtils.getStackTrace(e));
     }
   }
 }
