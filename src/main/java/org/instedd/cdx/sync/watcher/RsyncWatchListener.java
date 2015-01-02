@@ -20,20 +20,33 @@ public class RsyncWatchListener implements PathWatchListener {
 	}
 
 	@Override
+	public void onWatchStarted() {
+		logger.info("Watch started. Doing initial sync");
+		doSync();
+	}
+
+	@Override
 	public void onSinglePathChange(Kind<Path> kind, Path context) {
 		logger.info("File change event " + kind + " for file " + context);
 	}
 
 	public void onGlobalPathChange(Path path) {
+		logger.info("Path changed. Doing sync");
+		doSync();
+	}
+
+	protected void doSync() {
 		try {
-			//TODO exception handling should be done by PathWatch component, in order
-			//to avoid boilerplate here and avoid crashing in case programmer forgets try-catches
+			// TODO exception handling should be done by PathWatch component, in order
+			// to avoid boilerplate here and avoid crashing in case programmer forgets
+			// try-catches
 			mode.doSync(synchronizer);
 		} catch (Exception e) {
 			logger.warning("Exception thrown " + ExceptionUtils.getStackTrace(e));
 		}
 	}
-//TODO move to general sync code
+
+	// TODO move to general sync code
 	public enum SyncMode {
 		DOWNLOAD {
 			public void doSync(RsyncSynchronizer synchronizer) throws IOException {

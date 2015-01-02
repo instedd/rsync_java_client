@@ -31,6 +31,7 @@ public class PathWatcher {
 		WatchService watcher = path.getFileSystem().newWatchService();
 		path.register(watcher, ENTRY_CREATE, ENTRY_MODIFY);
 		try {
+			listener.onWatchStarted();
 			WatchKey key;
 			while ((key = watcher.take()) != null) {
 				for (WatchEvent<?> event : key.pollEvents()) {

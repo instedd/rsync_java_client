@@ -9,4 +9,6 @@ public interface PathWatchListener {
 
 	void onSinglePathChange(Kind<Path> kind, Path path);
 
+	void onWatchStarted();
+
 }

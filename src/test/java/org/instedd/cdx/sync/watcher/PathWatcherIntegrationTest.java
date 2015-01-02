@@ -60,7 +60,10 @@ public class PathWatcherIntegrationTest {
 			public void onGlobalPathChange(Path path) {
 				globalChangeEventsCount.incrementAndGet();
 			}
+
+			public void onWatchStarted() {
+			}
 		});
-  }
+	}
 
 }
