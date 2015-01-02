@@ -36,7 +36,7 @@ public class RSyncApplication {
 		RsyncSynchronizer synchronizer = newSynchronizer();
 		//TODO log sync mode
 		Runnable asyncWatch = PathWatcher.asyncWatch(Paths.get(settings.localOutboxDir), new RsyncWatchListener(synchronizer, syncMode));
-		thread = new Thread(asyncWatch);
+		thread = new Thread(asyncWatch, "watcher-thread");
 
 		SystemTrays.open(tooltip, imageFilename, new PopupMenuConfigurer() {
 			public void configure(PopupMenu menu) {
@@ -53,9 +53,15 @@ public class RSyncApplication {
 		thread.start();
 	}
 
+	public boolean isRunning() {
+		return thread != null && thread.isAlive();
+	}
+
 	public void stop() throws InterruptedException {
-		thread.interrupt();
-		thread.join();
+		if (thread != null) {
+			thread.interrupt();
+			thread.join();
+		}
 	}
 
 	protected RsyncSynchronizer newSynchronizer() {
