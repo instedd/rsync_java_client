@@ -54,8 +54,10 @@ public class RSyncApplication {
 	}
 
 	public void stop() throws InterruptedException {
-		thread.interrupt();
-		thread.join();
+		if (thread != null) {
+			thread.interrupt();
+			thread.join();
+		}
 	}
 
 	protected RsyncSynchronizer newSynchronizer() {
