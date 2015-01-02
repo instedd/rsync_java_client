@@ -35,7 +35,6 @@ public class Settings {
 	 */
 	//TODO where is located on Windows by default?
 	public String remoteKey = USER_HOME + "/.ssh/id_rsa";
-	public String serverSignatureLocation;
 	public String knownHostsFilePath;
 
 	/**
@@ -87,7 +86,6 @@ public class Settings {
 				remotePort = Integer.valueOf(extract(props, "remote.port", remotePort));
 				remoteUser = extract(props, "remote.user", remoteUser);
 				remoteKey = extract(props, "remote.key", remoteKey);
-				serverSignatureLocation = extract(props, "server.signature.location", serverSignatureLocation);
 				knownHostsFilePath = extract(props, "known.hosts.file.path", knownHostsFilePath);
 				localInboxDir = extract(props, "local.inbox.dir", localInboxDir);
 				localOutboxDir = extract(props, "local.outbox.dir", localOutboxDir);
