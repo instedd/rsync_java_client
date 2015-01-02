@@ -12,7 +12,7 @@ import org.instedd.cdx.sync.watcher.RsyncWatchListener.SyncMode;
 
 public class Main {
 	public static void main(String[] args) throws IOException, InterruptedException {
-		if(args.length != 1) {
+		if (args.length != 1) {
 			System.out.println("Usage: cdxsync <properties filename>");
 			System.exit(1);
 		}
@@ -36,29 +36,29 @@ public class Main {
 	}
 
 	protected static void stopOnExit(final RSyncApplication app) {
-	  Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
 			public void run() {
 				try {
-	        app.stop();
-        } catch (InterruptedException e) {
-        	throw new UnhandledException(e);
-        } finally {
+					app.stop();
+				} catch (InterruptedException e) {
+					throw new UnhandledException(e);
+				} finally {
 					System.out.println("bye!");
-        }
+				}
 			}
 		}));
-  }
+	}
 
 	protected static void loop(RSyncApplication app) {
 		System.out.println("Type bye to stop app, or stop it from the system tray");
-	  @SuppressWarnings("resource")
+		@SuppressWarnings("resource")
 		Scanner in = new Scanner(System.in);
 		while (in.hasNextLine() && app.isRunning()) {
 			if (in.nextLine().equals("bye"))
 				break;
 		}
 		System.exit(0);
-  }
+	}
 
 	protected static Properties properties(String propertiesFilename) throws IOException {
 		try (InputStream fileIs = new FileInputStream(propertiesFilename)) {
