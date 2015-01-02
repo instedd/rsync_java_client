@@ -1,7 +1,6 @@
 package org.instedd.cdx.sync.watcher;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,6 +9,7 @@ import java.nio.file.WatchEvent.Kind;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.UnhandledException;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -24,22 +24,22 @@ public class PathWatcherIntegrationTest {
 	private File rootDir;
 	private Runnable watch;
 
+	private Object ready = new Object();
+
 	@Before
 	public void setup() {
 		rootDir = root.getRoot();
 		watch = createWatcher(rootDir);
 	}
 
-	@Test
+	@Test(timeout = 60000)
 	public void notifiesListenerWhenFileSystemChanges() throws Exception {
 		Thread thread = new Thread(watch);
 		thread.start();
 
-		touch("foo");
-		touch("bar");
-		touch("baz");
-
-		Thread.sleep(60000);
+		synchronized (ready) {
+			ready.wait();
+		}
 		thread.interrupt();
 		thread.join();
 
@@ -48,13 +48,17 @@ public class PathWatcherIntegrationTest {
 	}
 
 	private void touch(String name) throws IOException {
-	  FileUtils.touch(new File(rootDir, name));
-  }
+		FileUtils.touch(new File(rootDir, name));
+	}
 
 	private Runnable createWatcher(File rootDir) {
-	  return PathWatcher.asyncWatch(rootDir.toPath(), new PathWatchListener() {
+		return PathWatcher.asyncWatch(rootDir.toPath(), new PathWatchListener() {
 			public void onSinglePathChange(Kind<Path> kind, Path path) {
-				singleChangeEventsCount.incrementAndGet();
+				if (singleChangeEventsCount.incrementAndGet() >= 3) {
+					synchronized (ready) {
+						ready.notify();
+					}
+				}
 			}
 
 			public void onGlobalPathChange(Path path) {
@@ -62,6 +66,13 @@ public class PathWatcherIntegrationTest {
 			}
 
 			public void onWatchStarted() {
+				try {
+					touch("foo");
+					touch("bar");
+					touch("baz");
+				} catch (IOException e) {
+					throw new UnhandledException(e);
+				}
 			}
 		});
 	}
