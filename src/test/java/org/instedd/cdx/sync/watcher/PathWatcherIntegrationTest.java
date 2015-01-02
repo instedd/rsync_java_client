@@ -21,7 +21,7 @@ public class PathWatcherIntegrationTest {
   private AtomicInteger singleChangeEventsCount = new AtomicInteger(0);
   private AtomicInteger globalChangeEventsCount = new AtomicInteger(0);
   private File rootDir;
-  private Runnable watch;
+  private PathWatcher watch;
 
   private Object ready = new Object();
 
@@ -33,7 +33,7 @@ public class PathWatcherIntegrationTest {
 
   @Test(timeout = 60000)
   public void notifiesListenerWhenFileSystemChanges() throws Exception {
-    Thread thread = new Thread(watch);
+    Thread thread = new Thread(watch::watch);
     thread.start();
 
     synchronized (ready) {
@@ -50,8 +50,8 @@ public class PathWatcherIntegrationTest {
     FileUtils.touch(new File(rootDir, name));
   }
 
-  private Runnable createWatcher(File rootDir) {
-    return PathWatcher.asyncWatch(rootDir.toPath(), new PathWatchListener() {
+  private PathWatcher createWatcher(File rootDir) {
+    return new PathWatcher(rootDir.toPath(), new PathWatchListener() {
       public void onSinglePathChange(Kind<Path> kind, Path path) {
         if (singleChangeEventsCount.incrementAndGet() >= 3) {
           synchronized (ready) {

@@ -31,8 +31,8 @@ public class RSyncApplication {
   public void start() {
     RsyncSynchronizer synchronizer = newSynchronizer();
     // TODO log sync mode
-    Runnable asyncWatch = PathWatcher.asyncWatch(Paths.get(settings.localOutboxDir), new RsyncWatchListener(synchronizer, syncMode));
-    thread = new Thread(asyncWatch, "watcher-thread");
+    PathWatcher watcher = new PathWatcher(Paths.get(settings.localOutboxDir), new RsyncWatchListener(synchronizer, syncMode));
+    thread = new Thread(watcher::watch, "watcher-thread");
 
     SystemTrays.open(tooltip, imageFilename, menu -> {
       MenuItem menuItem = new MenuItem("Stop Sync");

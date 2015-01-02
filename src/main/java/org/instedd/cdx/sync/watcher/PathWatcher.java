@@ -18,22 +18,25 @@ import org.instedd.cdx.sync.util.Exceptions.CheckedRunnable;
 public class PathWatcher {
 
   private static final Logger logger = Logger.getLogger(PathWatcher.class.getName());
+  private Path path;
+  private PathWatchListener listener;
 
-  public static Runnable asyncWatch(final Path path, final PathWatchListener listener) {
-    return () -> syncWatch(path, listener);
+  public PathWatcher(Path path, PathWatchListener listener) {
+    this.path = path;
+    this.listener = listener;
   }
 
-  public static void syncWatch(Path path, PathWatchListener listener) {
+  public void watch() {
     unchecked(() -> {
       WatchService watcher = path.getFileSystem().newWatchService();
       path.register(watcher, ENTRY_CREATE, ENTRY_MODIFY);
       listener.onWatchStarted();
-      interruptable(() -> pollEvents(path, listener, watcher));
+      interruptable(() -> pollEvents(watcher));
     });
   }
 
   @SuppressWarnings("unchecked")
-  protected static void pollEvents(Path path, PathWatchListener listener, WatchService watcher) throws InterruptedException {
+  protected void pollEvents(WatchService watcher) throws InterruptedException {
     WatchKey key;
     while ((key = watcher.take()) != null) {
       for (WatchEvent<?> event : key.pollEvents()) {
