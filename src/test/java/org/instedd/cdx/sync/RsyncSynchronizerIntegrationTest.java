@@ -5,7 +5,6 @@ import static org.junit.Assert.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.commons.lang.SystemUtils;
@@ -110,11 +109,8 @@ public class RsyncSynchronizerIntegrationTest {
   private AtomicBoolean setupSynchronizerWithListener() {
     synchronizer.setUp();
     final AtomicBoolean eventProperlyFired = new AtomicBoolean(false);
-    synchronizer.addListener(new RsyncSynchronizerListener() {
-      public void onFilesTransfered(List<String> transferredFilenames) {
-        eventProperlyFired.set(transferredFilenames.equals(Arrays.asList("sample")));
-      }
-    });
+    synchronizer.addListener(transferredFilenames -> //
+        eventProperlyFired.set(transferredFilenames.equals(Arrays.asList("sample"))));
     return eventProperlyFired;
   }
 

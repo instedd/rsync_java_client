@@ -1,5 +1,7 @@
 package org.instedd.cdx.sync.app;
 
+import static org.instedd.cdx.sync.util.Exceptions.interruptable;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,15 +37,11 @@ public class Main {
   }
 
   protected static void stopOnExit(final RSyncApplication app) {
-    Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-      public void run() {
-        try {
-          app.stop();
-        } catch (InterruptedException e) {
-          //OK.
-        } finally {
-          System.out.println("bye!");
-        }
+    Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+      try {
+        interruptable(app::stop);
+      } finally {
+        System.out.println("bye!");
       }
     }));
   }

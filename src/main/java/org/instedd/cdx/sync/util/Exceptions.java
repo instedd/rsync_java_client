@@ -7,7 +7,7 @@ import org.apache.commons.lang.UnhandledException;
 public class Exceptions {
 
   public interface CheckedRunnable {
-    void run() throws InterruptedException;
+    void run() throws Exception;
   }
 
   public interface InterruptableRunnable {

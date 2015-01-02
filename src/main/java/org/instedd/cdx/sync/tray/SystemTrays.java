@@ -1,13 +1,12 @@
 package org.instedd.cdx.sync.tray;
 
-import java.awt.AWTException;
+import static org.instedd.cdx.sync.util.Exceptions.unchecked;
+
 import java.awt.Image;
 import java.awt.PopupMenu;
 import java.awt.SystemTray;
 import java.awt.Toolkit;
 import java.awt.TrayIcon;
-
-import org.apache.commons.lang.UnhandledException;
 
 public class SystemTrays {
 
@@ -20,12 +19,8 @@ public class SystemTrays {
     Toolkit toolkit = Toolkit.getDefaultToolkit();
     PopupMenu menu = new PopupMenu(tooltip);
     configurer.configure(menu);
-    try {
-      if (imageFilename != null)
-        tray.add(createIcon(tooltip, imageFilename, menu, toolkit));
-    } catch (AWTException e) {
-      throw new UnhandledException(e);
-    }
+    if (imageFilename != null)
+      unchecked(() -> tray.add(createIcon(tooltip, imageFilename, menu, toolkit)));
   }
 
   public static TrayIcon createIcon(String tooltip, String imageFilename, PopupMenu menu, Toolkit toolkit) {
