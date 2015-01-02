@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.Properties;
 
 import org.apache.commons.lang.ObjectUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
@@ -100,8 +99,7 @@ public class Settings {
 
 
 	private static String extract(Properties properties, String key, Object defaultValue) {
-		String value = properties.getProperty("sync." + key);
-		return StringUtils.isEmpty(value) ? ObjectUtils.toString(defaultValue, null) : value;
+		return properties.getProperty("sync." + key, ObjectUtils.toString(defaultValue, null));
 	}
 
 }
