@@ -1,4 +1,4 @@
-package org.instedd.cdx.sync;
+package org.instedd.sync4j;
 
 import java.io.File;
 import java.io.FileNotFoundException;

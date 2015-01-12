@@ -1,4 +1,4 @@
-package org.instedd.cdx.sync;
+package org.instedd.sync4j;
 
 import static org.junit.Assert.*;
 
@@ -8,6 +8,9 @@ import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.commons.lang.SystemUtils;
+import org.instedd.sync4j.RsyncCommandBuilder;
+import org.instedd.sync4j.RsyncSynchronizer;
+import org.instedd.sync4j.Settings;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

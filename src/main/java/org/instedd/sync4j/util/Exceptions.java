@@ -1,4 +1,4 @@
-package org.instedd.cdx.sync.util;
+package org.instedd.sync4j.util;
 
 import java.util.concurrent.Callable;
 

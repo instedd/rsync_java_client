@@ -1,15 +1,15 @@
-package org.instedd.cdx.sync.app;
+package org.instedd.sync4j.app;
 
 import java.awt.MenuItem;
 import java.nio.file.Paths;
 
-import org.instedd.cdx.sync.RsyncCommandBuilder;
-import org.instedd.cdx.sync.RsyncSynchronizer;
-import org.instedd.cdx.sync.Settings;
-import org.instedd.cdx.sync.tray.SystemTrays;
-import org.instedd.cdx.sync.watcher.PathWatcher;
-import org.instedd.cdx.sync.watcher.RsyncWatchListener;
-import org.instedd.cdx.sync.watcher.RsyncWatchListener.SyncMode;
+import org.instedd.sync4j.RsyncCommandBuilder;
+import org.instedd.sync4j.RsyncSynchronizer;
+import org.instedd.sync4j.Settings;
+import org.instedd.sync4j.tray.SystemTrays;
+import org.instedd.sync4j.watcher.PathWatcher;
+import org.instedd.sync4j.watcher.RsyncWatchListener;
+import org.instedd.sync4j.watcher.RsyncWatchListener.SyncMode;
 
 public class RSyncApplication {
 

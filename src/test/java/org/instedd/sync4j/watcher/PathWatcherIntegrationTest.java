@@ -1,4 +1,4 @@
-package org.instedd.cdx.sync.watcher;
+package org.instedd.sync4j.watcher;
 
 import static org.junit.Assert.*;
 
@@ -9,6 +9,8 @@ import java.nio.file.WatchEvent.Kind;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.io.FileUtils;
+import org.instedd.sync4j.watcher.PathWatchListener;
+import org.instedd.sync4j.watcher.PathWatcher;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

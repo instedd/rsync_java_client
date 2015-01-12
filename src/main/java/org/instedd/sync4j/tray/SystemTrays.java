@@ -1,6 +1,6 @@
-package org.instedd.cdx.sync.tray;
+package org.instedd.sync4j.tray;
 
-import static org.instedd.cdx.sync.util.Exceptions.unchecked;
+import static org.instedd.sync4j.util.Exceptions.unchecked;
 
 import java.awt.Image;
 import java.awt.PopupMenu;

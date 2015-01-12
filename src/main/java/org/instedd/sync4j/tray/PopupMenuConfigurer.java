@@ -1,4 +1,4 @@
-package org.instedd.cdx.sync.tray;
+package org.instedd.sync4j.tray;
 
 import java.awt.PopupMenu;
 

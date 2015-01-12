@@ -1,11 +1,11 @@
-package org.instedd.cdx.sync.watcher;
+package org.instedd.sync4j.watcher;
 
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.WatchEvent.Kind;
 import java.util.logging.Logger;
 
-import org.instedd.cdx.sync.RsyncSynchronizer;
+import org.instedd.sync4j.RsyncSynchronizer;
 
 public class RsyncWatchListener implements PathWatchListener {
 

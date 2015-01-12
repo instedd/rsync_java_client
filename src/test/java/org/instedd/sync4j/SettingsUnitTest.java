@@ -1,5 +1,6 @@
-package org.instedd.cdx.sync;
+package org.instedd.sync4j;
 
+import org.instedd.sync4j.Settings;
 import org.junit.Test;
 
 public class SettingsUnitTest {

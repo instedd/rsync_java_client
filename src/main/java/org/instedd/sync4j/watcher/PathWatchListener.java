@@ -1,4 +1,4 @@
-package org.instedd.cdx.sync.watcher;
+package org.instedd.sync4j.watcher;
 
 import java.nio.file.Path;
 import java.nio.file.WatchEvent.Kind;
