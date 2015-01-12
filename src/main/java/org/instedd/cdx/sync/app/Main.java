@@ -21,7 +21,7 @@ public class Main {
     Properties properties = properties(propertiesFilename);
 
     Settings settings = Settings.fromProperties(properties);
-    System.out.printf("Settings are %s\n", settings);
+    System.out.printf("\n\n** Settings are %s **\n\n", settings);
 
     String appName = properties.getProperty("app.name");
     String appIcon = properties.getProperty("app.icon");
@@ -31,7 +31,7 @@ public class Main {
     stopOnExit(app);
     app.start();
 
-    System.out.printf("Now go and create or edit some files on %s\n", settings.localOutboxDir);
+    System.out.printf("\n\n** Now go and create or edit some files on %s **\n\n", settings.localOutboxDir);
     loop(app);
 
   }
@@ -47,7 +47,7 @@ public class Main {
   }
 
   protected static void loop(RSyncApplication app) {
-    System.out.println("Type bye to stop app, or stop it from the system tray");
+    System.out.print("\n\n** Type bye to stop app, or stop it from the system tray **\n\n");
     @SuppressWarnings("resource")
     Scanner in = new Scanner(System.in);
     while (in.hasNextLine() && app.isRunning()) {
