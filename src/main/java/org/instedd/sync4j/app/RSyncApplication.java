@@ -21,12 +21,16 @@ public class RSyncApplication {
     this.syncMode = syncMode;
   }
 
-  public void start(RSyncApplicationStopper... stoppers) {
+  public void start(RSyncApplicationMonitor... stoppers) {
     RsyncSynchronizer synchronizer = newSynchronizer();
     // TODO log sync mode
     PathWatcher watcher = new PathWatcher(Paths.get(settings.localOutboxDir), new RsyncWatchListener(synchronizer, syncMode));
-    thread = new Thread(watcher::watch, "watcher-thread");
-    for(RSyncApplicationStopper stopper : stoppers) {
+    thread = new Thread(() -> {
+      watcher.watch();
+      System.exit(0);
+    }, "watcher-thread");
+
+    for(RSyncApplicationMonitor stopper : stoppers) {
       stopper.start(this);
     }
     synchronizer.setUp();
@@ -40,12 +44,6 @@ public class RSyncApplication {
   public void stop() {
     if (thread != null) {
       thread.interrupt();
-    }
-  }
-
-  public void waitStop() throws InterruptedException {
-    if (thread != null) {
-      thread.join();
     }
   }
 

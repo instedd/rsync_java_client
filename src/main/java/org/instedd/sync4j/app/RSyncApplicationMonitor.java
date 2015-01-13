@@ -1,6 +1,6 @@
 package org.instedd.sync4j.app;
 
-public interface RSyncApplicationStopper {
+public interface RSyncApplicationMonitor {
 
   void start(RSyncApplication application);
 
