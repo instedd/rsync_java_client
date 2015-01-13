@@ -7,10 +7,11 @@ import java.awt.PopupMenu;
 import java.awt.SystemTray;
 import java.awt.Toolkit;
 import java.awt.TrayIcon;
+import java.net.URL;
 
 public class SystemTrays {
 
-  public static void open(String tooltip, String imageFilename, PopupMenuConfigurer configurer) {
+  public static void open(String tooltip, URL imageUrl, PopupMenuConfigurer configurer) {
     if (!SystemTray.isSupported()) {
       throw new UnsupportedOperationException("Tray is not available");
     }
@@ -19,12 +20,12 @@ public class SystemTrays {
     Toolkit toolkit = Toolkit.getDefaultToolkit();
     PopupMenu menu = new PopupMenu(tooltip);
     configurer.configure(menu);
-    if (imageFilename != null)
-      unchecked(() -> tray.add(createIcon(tooltip, imageFilename, menu, toolkit)));
+    if (imageUrl != null)
+      unchecked(() -> tray.add(createIcon(tooltip, imageUrl, menu, toolkit)));
   }
 
-  public static TrayIcon createIcon(String tooltip, String imageFilename, PopupMenu menu, Toolkit toolkit) {
-    Image image = toolkit.getImage(imageFilename);
+  public static TrayIcon createIcon(String tooltip, URL imageUrl, PopupMenu menu, Toolkit toolkit) {
+    Image image = toolkit.getImage(imageUrl);
     TrayIcon icon = new TrayIcon(image, tooltip, menu);
     icon.setImageAutoSize(true);
     return icon;

@@ -1,6 +1,7 @@
 package org.instedd.sync4j.app;
 
 import java.awt.MenuItem;
+import java.net.URL;
 import java.nio.file.Paths;
 
 import org.instedd.sync4j.RsyncCommandBuilder;
@@ -15,16 +16,16 @@ public class RSyncApplication {
 
   private final Settings settings;
   private final String tooltip;
-  private final String imageFilename;
+  private final URL imageUrl;
   private final SyncMode syncMode;
 
   private transient Thread thread;
 
   // TODO extract parameter object
-  public RSyncApplication(Settings settings, String tooltip, String imageFilename, SyncMode syncMode) {
+  public RSyncApplication(Settings settings, String tooltip, URL imageUrl, SyncMode syncMode) {
     this.settings = settings;
     this.tooltip = tooltip;
-    this.imageFilename = imageFilename;
+    this.imageUrl = imageUrl;
     this.syncMode = syncMode;
   }
 
@@ -34,7 +35,7 @@ public class RSyncApplication {
     PathWatcher watcher = new PathWatcher(Paths.get(settings.localOutboxDir), new RsyncWatchListener(synchronizer, syncMode));
     thread = new Thread(watcher::watch, "watcher-thread");
 
-    SystemTrays.open(tooltip, imageFilename, menu -> {
+    SystemTrays.open(tooltip, imageUrl, menu -> {
       MenuItem menuItem = new MenuItem("Stop Sync");
       menuItem.addActionListener(e -> thread.interrupt());
       menu.add(menuItem);
