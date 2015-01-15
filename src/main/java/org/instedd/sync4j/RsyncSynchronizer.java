@@ -9,7 +9,8 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
-import org.apache.commons.io.FileUtils;
+import org.instedd.sync4j.util.Processes;
+import org.instedd.sync4j.util.Processes.Exit;
 
 public class RsyncSynchronizer {
 
@@ -42,36 +43,29 @@ public class RsyncSynchronizer {
   }
 
   protected synchronized void sync(ProcessBuilder command) throws IOException {
-    File errFile = null, outFile = null;
+    Exit exit;
     try {
-      // TODO write to buffer instead of file
-      errFile = File.createTempFile("sync", "err");
-      outFile = File.createTempFile("sync", "out");
-
-      runCommand(command, errFile, outFile);
-
-      List<String> transferredFilenames = parseTransferredFilenames(outFile);
-      if (!transferredFilenames.isEmpty()) {
-        fireFilesTransfered(transferredFilenames);
-      }
-    } finally {
-      FileUtils.deleteQuietly(errFile);
-      FileUtils.deleteQuietly(outFile);
-    }
-  }
-
-  private void runCommand(ProcessBuilder command, File errFile, File outFile) throws IOException {
-    Process process = command.redirectError(errFile).redirectOutput(outFile).start();
-    try {
-      process.waitFor();
+      exit = runCommand(command);
     } catch (InterruptedException e) {
-      logger.info("Command aborted");
+      logger.info("Command interrupted");
+      return;
     }
-    logger.info("Proces exited with value " + process.exitValue());
-    logger.info("Stderr was " + FileUtils.readFileToString(errFile));
+
+    List<String> transferredFilenames = parseTransferredFilenames(exit.getStdout());
+    if (!transferredFilenames.isEmpty()) {
+      fireFilesTransfered(transferredFilenames);
+    }
   }
 
-  protected List<String> parseTransferredFilenames(File outFile) throws FileNotFoundException {
+  private Exit runCommand(ProcessBuilder command) throws IOException, InterruptedException {
+    Exit exit = Processes.run(command);
+    logger.info("Proces exited with value " + exit.getValue());
+    logger.info("Stderr was " + exit.getStderr());
+    logger.info("Stdout was " + exit.getStdout());
+    return exit;
+  }
+
+  protected List<String> parseTransferredFilenames(String outFile) throws FileNotFoundException {
     List<String> transferredFilenames = new ArrayList<>();
     try (Scanner s = new Scanner(outFile)) {
       while (s.hasNextLine()) {
