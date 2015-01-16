@@ -5,9 +5,9 @@ import static org.apache.commons.lang.SystemUtils.USER_HOME;
 import java.util.Arrays;
 import java.util.Properties;
 
-import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.builder.ToStringBuilder;
+import org.instedd.sync4j.settings.PropertiesSettingsStore;
 
 public class Settings {
 
@@ -80,23 +80,8 @@ public class Settings {
   }
 
   public static Settings fromProperties(final Properties props) {
-    return new Settings() {
-      {
-        remoteHost = extract(props, "remote.host", remoteHost);
-        remotePort = Integer.valueOf(extract(props, "remote.port", remotePort));
-        remoteUser = extract(props, "remote.user", remoteUser);
-        remoteKey = extract(props, "remote.key", remoteKey);
-        knownHostsFilePath = extract(props, "known.hosts.file.path", knownHostsFilePath);
-        localInboxDir = extract(props, "local.inbox.dir", localInboxDir);
-        localOutboxDir = extract(props, "local.outbox.dir", localOutboxDir);
-        remoteInboxDir = extract(props, "remote.inbox.dir", remoteInboxDir);
-        remoteOutboxDir = extract(props, "remote.outbox.dir", remoteOutboxDir);
-      }
-    };
+    return new PropertiesSettingsStore(props).getSettings();
   }
 
-  private static String extract(Properties properties, String key, Object defaultValue) {
-    return properties.getProperty("sync." + key, ObjectUtils.toString(defaultValue, null));
-  }
 
 }
