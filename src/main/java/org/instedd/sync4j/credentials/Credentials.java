@@ -20,11 +20,13 @@ public class Credentials {
   public Credentials(File privateKey, File publicKey) {
     Validate.notNull(privateKey);
     Validate.notNull(publicKey);
-    Validate.isTrue(publicKey.exists() && publicKey.isFile(), "Invalid public key file");
+    validateKeyFile(privateKey);
+    validateKeyFile(publicKey);
 
     this.privateKey = privateKey;
     this.publicKey = publicKey;
   }
+
 
   public String getPrivateKeyPath() {
     return privateKey.getAbsolutePath();
@@ -38,6 +40,10 @@ public class Credentials {
     return publicKey;
   }
 
+  protected static void validateKeyFile(File file) {
+    Validate.isTrue(file.exists() && file.isFile(), "Invalid key file");
+  }
+
   /**
    * Initializes a new pair of SSH keys if necessary.
    *
@@ -45,7 +51,7 @@ public class Credentials {
    */
   public static Credentials initialize(String remoteKey) throws IOException, InterruptedException {
     File privateKey = new File(remoteKey);
-    FileUtils.forceMkdir(privateKey);
+    FileUtils.forceMkdir(privateKey.getParentFile());
 
     if (!privateKey.exists()) {
       try {
