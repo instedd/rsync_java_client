@@ -70,4 +70,8 @@ public class Credentials {
 
     return new Credentials(privateKey, new File(remoteKey + ".pub"));
   }
+
+  public static String publicKeyForPrivate(String privateKeyPath) {
+    return privateKeyPath + ".pub";
+  }
 }
