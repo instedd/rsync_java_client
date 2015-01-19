@@ -19,20 +19,22 @@ public class CredentialsTest {
     File keyFile = root.newFile("id_rsa");
     root.newFile("id_rsa.pub");
 
-    Credentials credentials = Credentials.initialize(keyFile.getAbsolutePath());
+    Credentials credentials = new Credentials(keyFile);
+    credentials.ensure();
 
-    assertEquals(credentials.getPrivateKey().getAbsolutePath(), keyFile.getAbsolutePath());
-    assertThat(credentials.getPublicKey().getAbsolutePath(), CoreMatchers.containsString(".pub"));
+    assertEquals(credentials.getPrivateKeyFile().getAbsolutePath(), keyFile.getAbsolutePath());
+    assertThat(credentials.getPublicKeyFile().getAbsolutePath(), CoreMatchers.containsString(".pub"));
   }
 
   @Test
   public void initializesCredentialsWhenFileDoesNotExists() throws Exception {
     File keyFile = new File(root.getRoot(), "id_rsa");
 
-    Credentials credentials = Credentials.initialize(keyFile.getAbsolutePath());
+    Credentials credentials = new Credentials(keyFile);
+    credentials.ensure();
 
-    assertEquals(credentials.getPrivateKey().getAbsolutePath(), keyFile.getAbsolutePath());
-    assertThat(credentials.getPublicKey().getAbsolutePath(), CoreMatchers.containsString(".pub"));
+    assertEquals(credentials.getPrivateKeyFile().getAbsolutePath(), keyFile.getAbsolutePath());
+    assertThat(credentials.getPublicKeyFile().getAbsolutePath(), CoreMatchers.containsString(".pub"));
     assertTrue(keyFile.exists());
   }
 }

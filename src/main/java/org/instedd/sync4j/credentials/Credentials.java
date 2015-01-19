@@ -14,52 +14,45 @@ public class Credentials {
 
   static Logger logger = Logger.getLogger(Credentials.class.getName());
 
-  private File privateKey;
-  private File publicKey;
+  private File privateKeyFile;
 
-  public Credentials(File privateKey, File publicKey) {
-    Validate.notNull(privateKey);
-    Validate.notNull(publicKey);
-    validateKeyFile(privateKey);
-    validateKeyFile(publicKey);
+  public Credentials(File privateKeyFile) {
+    Validate.notNull(privateKeyFile);
 
-    this.privateKey = privateKey;
-    this.publicKey = publicKey;
+    this.privateKeyFile = privateKeyFile;
   }
-
 
   public String getPrivateKeyPath() {
-    return privateKey.getAbsolutePath();
+    return privateKeyFile.getAbsolutePath();
   }
 
-  public File getPrivateKey() {
-    return privateKey;
+  public File getPrivateKeyFile() {
+    return privateKeyFile;
   }
 
-  public File getPublicKey() {
-    return publicKey;
+  public File getPublicKeyFile() {
+    return publicKeyForPrivate(privateKeyFile);
   }
 
-  protected static void validateKeyFile(File file) {
-    Validate.isTrue(file.exists() && file.isFile(), "Invalid key file");
+  public String getPublicKey() throws IOException {
+    return FileUtils.readFileToString(getPrivateKeyFile());
   }
 
-  /**
-   * Initializes a new pair of SSH keys if necessary.
-   *
-   * @throws IOException
-   */
-  public static Credentials initialize(String remoteKey) throws IOException, InterruptedException {
-    File privateKey = new File(remoteKey);
-    FileUtils.forceMkdir(privateKey.getParentFile());
+  public void validate() {
+    validateKeyFile(getPrivateKeyFile());
+    validateKeyFile(getPublicKeyFile());
+  }
 
-    if (!privateKey.exists()) {
+  public void ensure() throws IOException, InterruptedException {
+    FileUtils.forceMkdir(privateKeyFile.getParentFile());
+
+    if (!privateKeyFile.exists()) {
       try {
-        logger.info("Generating a new pair of SSH keys [" + privateKey.getAbsolutePath() + "]");
+        logger.info("Generating a new pair of SSH keys [" + privateKeyFile.getAbsolutePath() + "]");
         // windows ignores the argument if it's the empty string instead of
         // passing an empty argument
         String emptyPassphrase = SystemUtils.IS_OS_WINDOWS ? "\"\"" : "";
-        ProcessBuilder command = new ProcessBuilder("ssh-keygen", "-t", "rsa", "-N", emptyPassphrase, "-f", privateKey.getPath());
+        ProcessBuilder command = new ProcessBuilder("ssh-keygen", "-t", "rsa", "-N", emptyPassphrase, "-f", privateKeyFile.getPath());
         Exit exit = Processes.run(command);
         logger.info("Exit value: " + exit.getValue() + " Stdout: " + exit.getStdout() + " Stderr: " + exit.getStderr());
       } catch (Exception e) {
@@ -68,10 +61,14 @@ public class Credentials {
       }
     }
 
-    return new Credentials(privateKey, new File(remoteKey + ".pub"));
+    validate();
   }
 
-  public static String publicKeyForPrivate(String privateKeyPath) {
-    return privateKeyPath + ".pub";
+  protected static void validateKeyFile(File file) {
+    Validate.isTrue(file.exists() && file.isFile(), "Invalid key file");
+  }
+
+  public static File publicKeyForPrivate(File privateKeyFile) {
+    return new File(privateKeyFile.getAbsolutePath() + ".pub");
   }
 }
