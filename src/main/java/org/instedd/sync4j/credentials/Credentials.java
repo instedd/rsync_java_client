@@ -43,9 +43,14 @@ public class Credentials {
     validateKeyFile(getPublicKeyFile());
   }
 
-  public void ensure() throws IOException, InterruptedException {
-    FileUtils.forceMkdir(privateKeyFile.getParentFile());
+  public File getParentDirectory() {
+    return privateKeyFile.getParentFile();
+  }
 
+  public void ensure() throws IOException, InterruptedException {
+    if (getParentDirectory() != null) {
+      FileUtils.forceMkdir(getParentDirectory());
+    }
     if (!privateKeyFile.exists()) {
       try {
         logger.info("Generating a new pair of SSH keys [" + privateKeyFile.getAbsolutePath() + "]");
@@ -60,9 +65,9 @@ public class Credentials {
         throw e;
       }
     }
-
     validate();
   }
+
 
   protected static void validateKeyFile(File file) {
     Validate.isTrue(file.exists() && file.isFile(), "Invalid key file");
