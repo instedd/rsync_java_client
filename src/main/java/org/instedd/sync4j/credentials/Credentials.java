@@ -35,7 +35,7 @@ public class Credentials {
   }
 
   public String getPublicKey() throws IOException {
-    return FileUtils.readFileToString(getPrivateKeyFile());
+    return FileUtils.readFileToString(getPublicKeyFile());
   }
 
   public void validate() {

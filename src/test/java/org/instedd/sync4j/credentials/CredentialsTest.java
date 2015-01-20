@@ -1,10 +1,11 @@
 package org.instedd.sync4j.credentials;
 
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.startsWith;
 import static org.junit.Assert.*;
 
 import java.io.File;
 
-import org.hamcrest.CoreMatchers;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -23,7 +24,7 @@ public class CredentialsTest {
     credentials.ensure();
 
     assertEquals(credentials.getPrivateKeyFile().getAbsolutePath(), keyFile.getAbsolutePath());
-    assertThat(credentials.getPublicKeyFile().getAbsolutePath(), CoreMatchers.containsString(".pub"));
+    assertThat(credentials.getPublicKeyFile().getAbsolutePath(), containsString(".pub"));
   }
 
   @Test
@@ -34,7 +35,9 @@ public class CredentialsTest {
     credentials.ensure();
 
     assertEquals(credentials.getPrivateKeyFile().getAbsolutePath(), keyFile.getAbsolutePath());
-    assertThat(credentials.getPublicKeyFile().getAbsolutePath(), CoreMatchers.containsString(".pub"));
+    assertThat(credentials.getPublicKeyFile().getAbsolutePath(), containsString(".pub"));
     assertTrue(keyFile.exists());
+    assertThat(credentials.getPublicKey(), startsWith("ssh-rsa AAAA"));
+
   }
 }
