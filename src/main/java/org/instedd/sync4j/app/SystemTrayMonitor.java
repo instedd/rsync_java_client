@@ -1,6 +1,7 @@
 package org.instedd.sync4j.app;
 
 import java.awt.MenuItem;
+import java.awt.PopupMenu;
 import java.net.URL;
 
 import org.instedd.sync4j.tray.SystemTrays;
@@ -16,13 +17,15 @@ public class SystemTrayMonitor implements RSyncApplicationMonitor {
 
   @Override
   public void start(RSyncApplication application) {
-    SystemTrays.open(tooltip, imageUrl, menu -> {
-      MenuItem menuItem = new MenuItem("Stop Sync");
-      menuItem.addActionListener(e -> {
-        application.stop();
-      });
-      menu.add(menuItem);
+    SystemTrays.open(tooltip, imageUrl, menu -> configureMenu(application, menu));
+  }
+
+  protected void configureMenu(RSyncApplication application, PopupMenu menu) {
+    MenuItem menuItem = new MenuItem("Stop Sync");
+    menuItem.addActionListener(e -> {
+      application.stop();
     });
+    menu.add(menuItem);
   }
 
 }
