@@ -21,7 +21,7 @@ public class RSyncApplication {
     this.syncMode = syncMode;
   }
 
-  public void start(RSyncApplicationMonitor... stoppers) {
+  public void start(RSyncApplicationMonitor... monitors) {
     RsyncSynchronizer synchronizer = newSynchronizer();
     // TODO log sync mode
     PathWatcher watcher = new PathWatcher(Paths.get(settings.localOutboxDir), new RsyncWatchListener(synchronizer, syncMode));
@@ -30,8 +30,8 @@ public class RSyncApplication {
       System.exit(0);
     }, "watcher-thread");
 
-    for(RSyncApplicationMonitor stopper : stoppers) {
-      stopper.start(this);
+    for(RSyncApplicationMonitor monitor : monitors) {
+      monitor.start(this);
     }
     synchronizer.setUp();
     thread.start();
