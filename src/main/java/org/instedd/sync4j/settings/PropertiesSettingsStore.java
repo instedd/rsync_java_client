@@ -4,7 +4,7 @@ import java.util.Properties;
 
 import org.apache.commons.lang.ObjectUtils;
 
-public class PropertiesSettingsStore extends StringsSettingsStore {
+public class PropertiesSettingsStore extends AbstractSettingsStore {
 
   private Properties props;
 

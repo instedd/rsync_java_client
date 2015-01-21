@@ -2,8 +2,9 @@ package org.instedd.sync4j.settings;
 
 import org.instedd.sync4j.Settings;
 
-public abstract class StringsSettingsStore {
+public abstract class AbstractSettingsStore implements SettingStore {
 
+  @Override
   public Settings getSettings() {
     return new Settings() {
       {
@@ -22,6 +23,7 @@ public abstract class StringsSettingsStore {
 
   protected abstract String get(String string, String value);
 
+  @Override
   public void setSettings(Settings settings) {
     set("remote.host", settings.remoteHost);
     set("remote.port", settings.remotePort.toString());

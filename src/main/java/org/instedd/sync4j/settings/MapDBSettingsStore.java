@@ -7,7 +7,7 @@ import org.instedd.sync4j.Settings;
 import org.mapdb.DB;
 import org.mapdb.DBMaker;
 
-public class MapDBSettingsStore extends StringsSettingsStore {
+public class MapDBSettingsStore extends AbstractSettingsStore {
 
   private NavigableMap<String, String> treeMap;
   private DB db;
