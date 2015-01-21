@@ -1,7 +1,7 @@
 package org.instedd.sync4j.credentials;
 
 import static org.apache.commons.lang.builder.EqualsBuilder.reflectionEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,7 +27,6 @@ public class MapDBSettingsStoreTest {
 
   @Test
   public void canSetAndGetSettings() throws IOException {
-
     Settings originalSettings = new Settings();
     originalSettings.remoteHost = "192.64.34.2";
     store.setSettings(originalSettings);
@@ -35,6 +34,11 @@ public class MapDBSettingsStoreTest {
     Settings settings = store.getSettings();
 
     assertTrue(reflectionEquals(settings, originalSettings));
+  }
+
+  @Test
+  public void thereAreNoSettingsOnAnEmptyDB() throws Exception {
+    assertNull(store.getSettings());
   }
 
 }

@@ -18,6 +18,15 @@ public class MapDBSettingsStore extends AbstractSettingsStore {
   }
 
   @Override
+  public Settings getSettings() {
+    if (treeMap.isEmpty()) {
+      return null;
+    }
+
+    return super.getSettings();
+  }
+
+  @Override
   public void setSettings(Settings settings) {
     super.setSettings(settings);
     db.commit();
@@ -28,7 +37,7 @@ public class MapDBSettingsStore extends AbstractSettingsStore {
   }
 
   protected void set(String key, String value) {
-    if(value != null) {
+    if (value != null) {
       treeMap.put(key, value);
     }
   }
