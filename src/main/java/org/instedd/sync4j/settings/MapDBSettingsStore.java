@@ -7,12 +7,12 @@ import org.instedd.sync4j.Settings;
 import org.mapdb.DB;
 import org.mapdb.DBMaker;
 
-class MapDBDataStore extends StringsSettingsStore {
+public class MapDBSettingsStore extends StringsSettingsStore {
 
   private NavigableMap<String, String> treeMap;
   private DB db;
 
-  public MapDBDataStore(DB db, NavigableMap<String, String> treeMap) {
+  public MapDBSettingsStore(DB db, NavigableMap<String, String> treeMap) {
     this.db = db;
     this.treeMap = treeMap;
   }
@@ -33,10 +33,10 @@ class MapDBDataStore extends StringsSettingsStore {
     }
   }
 
-  public static MapDBDataStore fromMapDB(String databaseFilename) {
+  public static MapDBSettingsStore fromMapDB(String databaseFilename) {
     DB db = DBMaker.newFileDB(new File(databaseFilename)).closeOnJvmShutdown().make();
     NavigableMap<String, String> map = db.getTreeMap("settings");
-    return new MapDBDataStore(db, map);
+    return new MapDBSettingsStore(db, map);
   }
 
 }
