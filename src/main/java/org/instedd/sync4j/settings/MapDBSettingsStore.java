@@ -32,7 +32,7 @@ public class MapDBSettingsStore extends AbstractSettingsStore {
     db.commit();
   }
 
-  protected String get(String key, String defaultValue) {
+  protected String get(String key) {
     return treeMap.get(key);
   }
 

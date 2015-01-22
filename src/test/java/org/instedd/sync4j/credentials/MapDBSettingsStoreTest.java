@@ -29,6 +29,7 @@ public class MapDBSettingsStoreTest {
   public void canSetAndGetSettings() throws IOException {
     Settings originalSettings = new Settings();
     originalSettings.remoteHost = "192.64.34.2";
+    originalSettings.strictHostChecking = false;
     store.setSettings(originalSettings);
 
     Settings settings = store.getSettings();

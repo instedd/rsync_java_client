@@ -53,12 +53,19 @@ public class RsyncCommandBuilder {
     String userParam = isEmpty(settings.remoteUser) ? "" : "-l " + settings.remoteUser + "";
     String knownHostsParam = isEmpty(settings.knownHostsFilePath) ? "" : "-oUserKnownHostsFile=\"" + cygwinPath(settings.knownHostsFilePath) + "\"";
     return "ssh -p " + settings.remotePort + " " + userParam + " -i \"" + cygwinPath(settings.remoteKey) + "\" " + knownHostsParam
-        + " -oBatchMode=yes";
+        + " -oBatchMode=yes" + strictCheckingOption();
   }
 
   protected String localPath(String dir) {
     dir = dir.endsWith("/") ? dir : "" + dir + "/";
     return cygwinPath(dir);
+  }
+
+  protected String strictCheckingOption() {
+    if ( !settings.strictHostChecking ) {
+      return " -oStrictHostKeyChecking=no";
+    }
+    return "";
   }
 
   public String cygwinPath(String path) {

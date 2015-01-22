@@ -65,6 +65,8 @@ public class Settings {
    */
   public String remoteOutboxDir = "/outbox";
 
+  public boolean strictHostChecking = true;
+
   public void validate() {
     for (Object f : Arrays.asList(remoteHost, remotePort, remoteKey)) {
       Validate.notNull(f, "Remote host settings missing (required: host, port, user and path to ssh key");

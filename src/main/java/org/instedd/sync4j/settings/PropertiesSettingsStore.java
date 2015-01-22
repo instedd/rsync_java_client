@@ -2,8 +2,6 @@ package org.instedd.sync4j.settings;
 
 import java.util.Properties;
 
-import org.apache.commons.lang.ObjectUtils;
-
 public class PropertiesSettingsStore extends AbstractSettingsStore {
 
   private Properties props;
@@ -12,8 +10,8 @@ public class PropertiesSettingsStore extends AbstractSettingsStore {
     this.props = props;
   }
 
-  protected String get(String key, String defaultValue) {
-    return props.getProperty("sync." + key, ObjectUtils.toString(defaultValue, null));
+  protected String get(String key) {
+    return props.getProperty("sync." + key);
   }
 
   @Override

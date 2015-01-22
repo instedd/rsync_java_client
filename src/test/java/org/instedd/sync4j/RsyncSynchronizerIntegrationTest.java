@@ -47,6 +47,8 @@ public class RsyncSynchronizerIntegrationTest {
 
         remoteOutboxDir = remoteOutbox.getAbsolutePath();
         remoteInboxDir = remoteInbox.getAbsolutePath();
+
+        strictHostChecking = false;
       }
     };
 
