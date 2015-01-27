@@ -1,7 +1,7 @@
-sync4j
+rsync_java_client
 ======
 
-Welcome to sync4j. This repository contains library code to develop rsync-based file synchronization clients. 
+Welcome to rsync_java_client. This repository contains library code to develop rsync-based file synchronization clients. 
 
 # Building the code
 
