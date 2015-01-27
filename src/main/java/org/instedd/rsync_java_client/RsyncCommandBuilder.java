@@ -1,4 +1,4 @@
-package org.instedd.sync4j;
+package org.instedd.rsync_java_client;
 
 import static org.apache.commons.lang.StringUtils.isEmpty;
 

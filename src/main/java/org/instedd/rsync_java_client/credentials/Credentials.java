@@ -1,4 +1,4 @@
-package org.instedd.sync4j.credentials;
+package org.instedd.rsync_java_client.credentials;
 
 import java.io.File;
 import java.io.IOException;
@@ -7,8 +7,8 @@ import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.SystemUtils;
 import org.apache.commons.lang.Validate;
-import org.instedd.sync4j.util.Processes;
-import org.instedd.sync4j.util.Processes.Exit;
+import org.instedd.rsync_java_client.util.Processes;
+import org.instedd.rsync_java_client.util.Processes.Exit;
 
 public class Credentials {
 

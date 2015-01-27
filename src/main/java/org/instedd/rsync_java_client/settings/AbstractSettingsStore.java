@@ -1,8 +1,8 @@
-package org.instedd.sync4j.settings;
+package org.instedd.rsync_java_client.settings;
 
 import java.util.Objects;
 
-import org.instedd.sync4j.Settings;
+import org.instedd.rsync_java_client.Settings;
 
 public abstract class AbstractSettingsStore implements SettingStore {
 

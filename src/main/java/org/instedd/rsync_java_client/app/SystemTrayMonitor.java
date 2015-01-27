@@ -1,10 +1,10 @@
-package org.instedd.sync4j.app;
+package org.instedd.rsync_java_client.app;
 
 import java.awt.MenuItem;
 import java.awt.PopupMenu;
 import java.net.URL;
 
-import org.instedd.sync4j.tray.SystemTrays;
+import org.instedd.rsync_java_client.tray.SystemTrays;
 
 public class SystemTrayMonitor implements RSyncApplicationMonitor {
   private String tooltip;

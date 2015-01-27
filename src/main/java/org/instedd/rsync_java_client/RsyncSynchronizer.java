@@ -1,4 +1,4 @@
-package org.instedd.sync4j;
+package org.instedd.rsync_java_client;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
-import org.instedd.sync4j.util.Processes;
-import org.instedd.sync4j.util.Processes.Exit;
+import org.instedd.rsync_java_client.util.Processes;
+import org.instedd.rsync_java_client.util.Processes.Exit;
 
 public class RsyncSynchronizer {
 

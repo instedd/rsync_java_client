@@ -1,9 +1,9 @@
-package org.instedd.sync4j.settings;
+package org.instedd.rsync_java_client.settings;
 
 import java.io.File;
 import java.util.NavigableMap;
 
-import org.instedd.sync4j.Settings;
+import org.instedd.rsync_java_client.Settings;
 import org.mapdb.DB;
 import org.mapdb.DBMaker;
 

@@ -1,13 +1,13 @@
-package org.instedd.sync4j.app;
+package org.instedd.rsync_java_client.app;
 
 import java.nio.file.Paths;
 
-import org.instedd.sync4j.RsyncCommandBuilder;
-import org.instedd.sync4j.RsyncSynchronizer;
-import org.instedd.sync4j.Settings;
-import org.instedd.sync4j.watcher.PathWatcher;
-import org.instedd.sync4j.watcher.RsyncWatchListener;
-import org.instedd.sync4j.watcher.RsyncWatchListener.SyncMode;
+import org.instedd.rsync_java_client.RsyncCommandBuilder;
+import org.instedd.rsync_java_client.RsyncSynchronizer;
+import org.instedd.rsync_java_client.Settings;
+import org.instedd.rsync_java_client.watcher.PathWatcher;
+import org.instedd.rsync_java_client.watcher.RsyncWatchListener;
+import org.instedd.rsync_java_client.watcher.RsyncWatchListener.SyncMode;
 
 public class RSyncApplication {
 

@@ -1,4 +1,4 @@
-package org.instedd.sync4j.tray;
+package org.instedd.rsync_java_client.tray;
 
 import java.awt.PopupMenu;
 

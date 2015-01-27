@@ -1,6 +1,6 @@
-package org.instedd.sync4j.settings;
+package org.instedd.rsync_java_client.settings;
 
-import org.instedd.sync4j.Settings;
+import org.instedd.rsync_java_client.Settings;
 
 public interface SettingStore {
 

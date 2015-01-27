@@ -1,4 +1,4 @@
-package org.instedd.sync4j.credentials;
+package org.instedd.rsync_java_client.credentials;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.startsWith;

@@ -1,12 +1,12 @@
-package org.instedd.sync4j;
+package org.instedd.rsync_java_client;
 
 import static org.junit.Assert.*;
 
 import java.io.IOException;
 
 import org.apache.commons.lang.StringUtils;
-import org.instedd.sync4j.RsyncCommandBuilder;
-import org.instedd.sync4j.Settings;
+import org.instedd.rsync_java_client.RsyncCommandBuilder;
+import org.instedd.rsync_java_client.Settings;
 import org.junit.Before;
 import org.junit.Test;
 

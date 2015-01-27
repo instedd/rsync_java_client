@@ -1,6 +1,6 @@
-package org.instedd.sync4j.tray;
+package org.instedd.rsync_java_client.tray;
 
-import static org.instedd.sync4j.util.Exceptions.unchecked;
+import static org.instedd.rsync_java_client.util.Exceptions.unchecked;
 
 import java.awt.Image;
 import java.awt.PopupMenu;

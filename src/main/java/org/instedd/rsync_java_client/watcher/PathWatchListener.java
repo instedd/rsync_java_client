@@ -1,4 +1,4 @@
-package org.instedd.sync4j.watcher;
+package org.instedd.rsync_java_client.watcher;
 
 import java.nio.file.Path;
 import java.nio.file.WatchEvent.Kind;

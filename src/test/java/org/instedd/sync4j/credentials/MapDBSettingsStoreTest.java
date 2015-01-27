@@ -1,4 +1,4 @@
-package org.instedd.sync4j.credentials;
+package org.instedd.rsync_java_client.credentials;
 
 import static org.apache.commons.lang.builder.EqualsBuilder.reflectionEquals;
 import static org.junit.Assert.*;
@@ -6,8 +6,8 @@ import static org.junit.Assert.*;
 import java.io.File;
 import java.io.IOException;
 
-import org.instedd.sync4j.Settings;
-import org.instedd.sync4j.settings.MapDBSettingsStore;
+import org.instedd.rsync_java_client.Settings;
+import org.instedd.rsync_java_client.settings.MapDBSettingsStore;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

@@ -1,4 +1,4 @@
-package org.instedd.sync4j;
+package org.instedd.rsync_java_client;
 
 import static org.apache.commons.lang.SystemUtils.USER_HOME;
 
@@ -7,7 +7,7 @@ import java.util.Properties;
 
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.builder.ToStringBuilder;
-import org.instedd.sync4j.settings.PropertiesSettingsStore;
+import org.instedd.rsync_java_client.settings.PropertiesSettingsStore;
 
 public class Settings {
 

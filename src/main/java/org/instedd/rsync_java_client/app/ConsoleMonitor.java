@@ -1,4 +1,4 @@
-package org.instedd.sync4j.app;
+package org.instedd.rsync_java_client.app;
 
 import java.util.Scanner;
 

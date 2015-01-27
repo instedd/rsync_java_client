@@ -1,4 +1,4 @@
-package org.instedd.sync4j.util;
+package org.instedd.rsync_java_client.util;
 
 import java.util.concurrent.Callable;
 

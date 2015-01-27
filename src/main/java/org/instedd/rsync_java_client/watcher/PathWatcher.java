@@ -1,9 +1,9 @@
-package org.instedd.sync4j.watcher;
+package org.instedd.rsync_java_client.watcher;
 
 import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
 import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
-import static org.instedd.sync4j.util.Exceptions.interruptable;
-import static org.instedd.sync4j.util.Exceptions.unchecked;
+import static org.instedd.rsync_java_client.util.Exceptions.interruptable;
+import static org.instedd.rsync_java_client.util.Exceptions.unchecked;
 
 import java.nio.file.Path;
 import java.nio.file.WatchEvent;
@@ -13,7 +13,7 @@ import java.nio.file.WatchService;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
-import org.instedd.sync4j.util.Exceptions.CheckedRunnable;
+import org.instedd.rsync_java_client.util.Exceptions.CheckedRunnable;
 
 public class PathWatcher {
 
