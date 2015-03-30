@@ -21,11 +21,11 @@ public class RsyncCommandBuilder {
   }
 
   public ProcessBuilder buildUploadCommand() {
-    return process(RSYNC_COMMAND, "-iaz", "--remove-source-files", "-e", shellCommand(), getLocalOutboxPath(), getRemoteInboxPath());
+    return process(RSYNC_COMMAND, "-irltz", "--chmod=ug=rwX,o=", "--remove-source-files", "-e", shellCommand(), getLocalOutboxPath(), getRemoteInboxPath());
   }
 
   public ProcessBuilder buildDownloadCommand() {
-    return process(RSYNC_COMMAND, "-iaz", "--remove-source-files", "-e", shellCommand(), getRemoteOutboxPath(), getLocalInboxPath());
+    return process(RSYNC_COMMAND, "-irltz", "--chmod=ug=rwX,o=", "--remove-source-files", "-e", shellCommand(), getRemoteOutboxPath(), getLocalInboxPath());
   }
 
   public ProcessBuilder buildTestCommand() {

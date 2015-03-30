@@ -34,7 +34,7 @@ public class RsyncCommandBuilderUnitTest {
 
   @Test
   public void canBuildDownload() {
-    assertCommandLike("rsync -iaz --remove-source-files -e ssh -p 22 -l user -i \"todo\"  -oBatchMode=yes localhost:/outbox/ sampleIn/",
+    assertCommandLike("rsync -irltz --chmod=ug=rwX,o= --remove-source-files -e ssh -p 22 -l user -i \"todo\"  -oBatchMode=yes localhost:/outbox/ sampleIn/",
         builder.buildDownloadCommand());
   }
 
@@ -45,7 +45,7 @@ public class RsyncCommandBuilderUnitTest {
 
   @Test
   public void canBuildUpload() throws Exception {
-    assertCommandLike("rsync -iaz --remove-source-files -e ssh -p 22 -l user -i \"todo\"  -oBatchMode=yes sampleOut/ localhost:/inbox",
+    assertCommandLike("rsync -irltz --chmod=ug=rwX,o= --remove-source-files -e ssh -p 22 -l user -i \"todo\"  -oBatchMode=yes sampleOut/ localhost:/inbox",
         builder.buildUploadCommand());
   }
 
