@@ -5,7 +5,7 @@ Welcome to rsync_java_client. This repository contains library code to develop r
 
 # Building the code
 
-You will need Apache Maven installed, and a JDK7 or newer.
+You will need Apache Maven installed, and a JDK8 or newer.
 
 Just run:
 
