@@ -70,7 +70,7 @@ public class RsyncCommandBuilder {
 
   public String cygwinPath(String path) {
     if (SystemUtils.IS_OS_WINDOWS) {
-      // replace "C:/something" with "/cygdrive/c/something" for rsync to
+      // replace "C:\some\path" with "/cygdrive/c/some/path" for rsync to
       // understand it
       path = path.replaceFirst("^(.):\\/*", "/cygdrive/$1/");
       path = path.replace("\\", "/");

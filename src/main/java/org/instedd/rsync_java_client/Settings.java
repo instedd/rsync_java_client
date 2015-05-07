@@ -1,7 +1,5 @@
 package org.instedd.rsync_java_client;
 
-import static org.apache.commons.lang.SystemUtils.USER_HOME;
-
 import java.util.Arrays;
 import java.util.Properties;
 
@@ -33,15 +31,22 @@ public class Settings {
    *
    * Defaults to ~/.ssh/id_rsa
    */
-  // TODO where is located on Windows by default?
-  public String remoteKey = USER_HOME + "/.ssh/id_rsa";
-  public String knownHostsFilePath;
+  public String remoteKey = combine(rootPath(), ".ssh/id_rsa");
+
+  public String knownHostsFilePath = combine(rootPath(), "known_hosts");
+
+  /**
+   * The configuration path, the place where all the settings and keys are stored.
+   *
+   * Defaults to ~
+   */
+  public String rootPath = System.getProperty("user.home");
 
   /**
    * Client directory where files transferred from server to client will be
    * placed after download
    */
-  public String localInboxDir;
+  public String localInboxDir = combine(rootPath(), "cdx/inbox");
 
   /**
    * Client directory where files transferred from client to server must be
@@ -81,9 +86,14 @@ public class Settings {
     return ToStringBuilder.reflectionToString(this);
   }
 
+  private String combine(String path1, String path2)
+  {
+    File file1 = new File(path1);
+    File file2 = new File(file1, path2);
+    return file2.getPath();
+  }
+
   public static Settings fromProperties(final Properties props) {
     return new PropertiesSettingsStore(props).getSettings();
   }
-
-
 }
