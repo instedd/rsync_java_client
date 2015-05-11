@@ -23,6 +23,7 @@ public class RsyncCommandBuilderUnitTest {
         remotePort = 22;
         remoteUser = "user";
         remoteKey = "todo";
+        knownHostsFilePath = "";
       }
     };
 

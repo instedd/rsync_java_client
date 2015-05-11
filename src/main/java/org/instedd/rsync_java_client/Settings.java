@@ -1,14 +1,18 @@
 package org.instedd.rsync_java_client;
 
+import java.io.File;
+
 import java.util.Arrays;
 import java.util.Properties;
+
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.instedd.rsync_java_client.settings.PropertiesSettingsStore;
 
 public class Settings {
-
   /**
    * The host to connect to
    */
@@ -27,26 +31,35 @@ public class Settings {
   public String remoteUser;
 
   /**
-   * The private ssh key used to log into the remote host.
-   *
-   * Defaults to ~/.ssh/id_rsa
-   */
-  public String remoteKey = combine(rootPath(), ".ssh/id_rsa");
-
-  public String knownHostsFilePath = combine(rootPath(), "known_hosts");
-
-  /**
    * The configuration path, the place where all the settings and keys are stored.
    *
    * Defaults to ~
    */
-  public String rootPath = System.getProperty("user.home");
+  public Path rootPath;
+
+  public String remoteKey;
+
+  /**
+   * The private ssh key used to log into the remote host.
+   *
+   * Defaults to ~/.ssh/id_rsa
+   */
+  public String getRemoteKeyPath() {
+    if (remoteKey != null) {
+      return remoteKey;
+    } else {
+      return rootPath.resolve("remote_key").toString();
+    }
+  }
+
+  public String knownHostsFilePath;
+
 
   /**
    * Client directory where files transferred from server to client will be
    * placed after download
    */
-  public String localInboxDir = combine(rootPath(), "cdx/inbox");
+  public String localInboxDir;
 
   /**
    * Client directory where files transferred from client to server must be
@@ -72,9 +85,33 @@ public class Settings {
 
   public boolean strictHostChecking = true;
 
+  public Settings(String appName, String rootPath) {
+    if (rootPath == null) {
+      if (System.getProperty("os.name").contains("Windows")) {
+        this.rootPath = FileSystems.getDefault().getPath(System.getenv("LOCALAPPDATA"), appName);
+      } else {
+        this.rootPath = FileSystems.getDefault().getPath(System.getProperty("user.home"), "." + appName);
+      }
+    } else {
+      this.rootPath = FileSystems.getDefault().getPath(rootPath);
+    }
+
+    File rootPathDir = new File(this.rootPath.toString());
+    if (!rootPathDir.exists()) {
+      rootPathDir.mkdirs();
+    }
+
+    knownHostsFilePath = this.rootPath.resolve("known_hosts").toString();
+    localInboxDir = this.rootPath.resolve("cdx/inbox").toString();
+  }
+
+  public Settings() {
+    this("rsync_java_client", null);
+  }
+
   public void validate() {
-    for (Object f : Arrays.asList(remoteHost, remotePort, remoteKey)) {
-      Validate.notNull(f, "Remote host settings missing (required: host, port, user and path to ssh key");
+    for (Object f : Arrays.asList(remoteHost, remotePort)) {
+      Validate.notNull(f, "Remote host settings missing (required: host, port)");
     }// TODO this validation depends on sync mode
     if (localInboxDir == null && localOutboxDir == null) {
       throw new IllegalArgumentException("either inboxLocalDir or outboxLocalDir must be set");
@@ -84,13 +121,6 @@ public class Settings {
   @Override
   public String toString() {
     return ToStringBuilder.reflectionToString(this);
-  }
-
-  private String combine(String path1, String path2)
-  {
-    File file1 = new File(path1);
-    File file2 = new File(file1, path2);
-    return file2.getPath();
   }
 
   public static Settings fromProperties(final Properties props) {
