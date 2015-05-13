@@ -3,13 +3,14 @@ package org.instedd.rsync_java_client.watcher;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.WatchEvent.Kind;
-import java.util.logging.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.instedd.rsync_java_client.RsyncSynchronizer;
 
 public class RsyncWatchListener implements PathWatchListener {
 
-  private static final Logger logger = Logger.getLogger(RsyncWatchListener.class.getName());
+  private static final Log log = LogFactory.getLog(RsyncWatchListener.class);
   private RsyncSynchronizer synchronizer;
   private SyncMode mode;
 
@@ -20,17 +21,17 @@ public class RsyncWatchListener implements PathWatchListener {
 
   @Override
   public void onWatchStarted() throws IOException {
-    logger.info("Watch started. Doing initial sync");
+    log.info("Watch started. Doing initial sync");
     mode.doSync(synchronizer);
   }
 
   @Override
   public void onSinglePathChange(Kind<Path> kind, Path context) {
-    logger.info("File change event " + kind + " for file " + context);
+    log.info("File change event " + kind + " for file " + context);
   }
 
   public void onGlobalPathChange(Path path) throws IOException {
-    logger.info("Path changed. Doing sync");
+    log.info("Path changed. Doing sync");
     mode.doSync(synchronizer);
   }
 

@@ -7,14 +7,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Scanner;
-import java.util.logging.Logger;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.instedd.rsync_java_client.util.Processes;
 import org.instedd.rsync_java_client.util.Processes.Exit;
 
 public class RsyncSynchronizer {
 
-  private final Logger logger = Logger.getLogger(RsyncSynchronizer.class.getName());
+  private final Log log = LogFactory.getLog(RsyncSynchronizer.class);
 
   private RsyncCommandBuilder commandBuilder;
   private Collection<RsyncSynchronizerListener> listeners = new ArrayList<>();
@@ -29,12 +30,12 @@ public class RsyncSynchronizer {
   }
 
   public void uploadDocuments() throws IOException {
-    logger.info("Will sync files from " + commandBuilder.getLocalOutboxPath() + " to " + commandBuilder.getRemoteInboxPath() + "");
+    log.info("Will sync files from " + commandBuilder.getLocalOutboxPath() + " to " + commandBuilder.getRemoteInboxPath() + "");
     this.sync(commandBuilder.buildUploadCommand());
   }
 
   public void downloadDocuments() throws IOException {
-    logger.info("Will sync files from " + commandBuilder.getRemoteOutboxPath() + " to " + commandBuilder.getLocalInboxPath() + "");
+    log.info("Will sync files from " + commandBuilder.getRemoteOutboxPath() + " to " + commandBuilder.getLocalInboxPath() + "");
     this.sync(commandBuilder.buildDownloadCommand());
   }
 
@@ -47,7 +48,7 @@ public class RsyncSynchronizer {
     try {
       exit = runCommand(command);
     } catch (InterruptedException e) {
-      logger.info("Command interrupted");
+      log.info("Command interrupted");
       return;
     }
 
@@ -59,9 +60,9 @@ public class RsyncSynchronizer {
 
   private Exit runCommand(ProcessBuilder command) throws IOException, InterruptedException {
     Exit exit = Processes.run(command);
-    logger.info("Proces exited with value " + exit.getValue());
-    logger.info("Stderr was " + exit.getStderr());
-    logger.info("Stdout was " + exit.getStdout());
+    log.info("Proces exited with value " + exit.getValue());
+    log.info("Stderr was " + exit.getStderr());
+    log.info("Stdout was " + exit.getStdout());
     return exit;
   }
 
@@ -81,9 +82,9 @@ public class RsyncSynchronizer {
   protected void checkRsyncAvailable() {
     try {
       commandBuilder.buildTestCommand().start();
-      logger.info("Rsync presence test successful");
+      log.info("Rsync presence test successful");
     } catch (Exception e) {
-      logger.warning("Could not run test rsync command. Please check that the executable is available");
+      log.warn("Could not run test rsync command. Please check that the executable is available");
       throw new IllegalStateException("Could not run test rsync command. Please check that the executable is available.", e);
     }
   }

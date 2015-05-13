@@ -10,14 +10,15 @@ import java.nio.file.WatchEvent;
 import java.nio.file.WatchEvent.Kind;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
-import java.util.logging.Logger;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.instedd.rsync_java_client.util.Exceptions.CheckedRunnable;
 
 public class PathWatcher {
 
-  private static final Logger logger = Logger.getLogger(PathWatcher.class.getName());
+  private static final Log log = LogFactory.getLog(PathWatcher.class);
   private Path path;
   private PathWatchListener listener;
 
@@ -51,7 +52,7 @@ public class PathWatcher {
     try {
       runnable.run();
     } catch (Exception e) {
-      logger.warning("Exception thrown " + ExceptionUtils.getStackTrace(e));
+      log.warn("Exception thrown " + ExceptionUtils.getStackTrace(e));
     }
   }
 }

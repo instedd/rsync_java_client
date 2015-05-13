@@ -2,17 +2,18 @@ package org.instedd.rsync_java_client.credentials;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.SystemUtils;
 import org.apache.commons.lang.Validate;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.instedd.rsync_java_client.util.Processes;
 import org.instedd.rsync_java_client.util.Processes.Exit;
 
 public class Credentials {
 
-  static Logger logger = Logger.getLogger(Credentials.class.getName());
+  static Log log = LogFactory.getLog(Credentials.class);
 
   private File privateKeyFile;
 
@@ -53,15 +54,15 @@ public class Credentials {
     }
     if (!privateKeyFile.exists()) {
       try {
-        logger.info("Generating a new pair of SSH keys [" + privateKeyFile.getAbsolutePath() + "]");
+        log.info("Generating a new pair of SSH keys [" + privateKeyFile.getAbsolutePath() + "]");
         // windows ignores the argument if it's the empty string instead of
         // passing an empty argument
         String emptyPassphrase = SystemUtils.IS_OS_WINDOWS ? "\"\"" : "";
         ProcessBuilder command = new ProcessBuilder("ssh-keygen", "-t", "rsa", "-N", emptyPassphrase, "-f", privateKeyFile.getPath());
         Exit exit = Processes.run(command);
-        logger.info("Exit value: " + exit.getValue() + " Stdout: " + exit.getStdout() + " Stderr: " + exit.getStderr());
+        log.info("Exit value: " + exit.getValue() + " Stdout: " + exit.getStdout() + " Stderr: " + exit.getStderr());
       } catch (Exception e) {
-        logger.severe("A problem occurred while generating ssh keys: " + e);
+        log.error("A problem occurred while generating ssh keys: " + e);
         throw e;
       }
     }
