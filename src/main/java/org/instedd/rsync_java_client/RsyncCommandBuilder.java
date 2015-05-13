@@ -17,7 +17,9 @@ public class RsyncCommandBuilder {
   }
 
   private ProcessBuilder process(String... tokens) {
-    return new ProcessBuilder(Arrays.asList(tokens));
+    ProcessBuilder proc = new ProcessBuilder(Arrays.asList(tokens));
+    proc.environment().clear();
+    return proc;
   }
 
   public ProcessBuilder buildUploadCommand() {
