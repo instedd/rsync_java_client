@@ -72,7 +72,7 @@ public class RsyncCommandBuilder {
     if (SystemUtils.IS_OS_WINDOWS) {
       // replace "C:\some\path" with "/cygdrive/c/some/path" for rsync to
       // understand it
-      path = path.replaceFirst("^(.):\\/*", "/cygdrive/$1/");
+      path = path.replaceFirst("^(.):", "/cygdrive/$1");
       path = path.replace("\\", "/");
     }
     return path;
