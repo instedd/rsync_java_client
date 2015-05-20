@@ -54,7 +54,7 @@ public class RsyncCommandBuilder {
   public String shellCommand() {
     String userParam = isEmpty(settings.remoteUser) ? "" : "-l " + settings.remoteUser + "";
     String knownHostsParam = isEmpty(settings.knownHostsFilePath) ? "" : "-oUserKnownHostsFile=\"" + cygwinPath(settings.knownHostsFilePath) + "\"";
-    return "ssh -p " + settings.remotePort + " " + userParam + " -i \"" + cygwinPath(settings.remoteKey) + "\" " + knownHostsParam
+    return "ssh -p " + settings.remotePort + " " + userParam + " -i \"" + cygwinPath(settings.getRemoteKeyPath()) + "\" " + knownHostsParam
         + " -oBatchMode=yes" + strictCheckingOption();
   }
 
