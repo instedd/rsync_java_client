@@ -7,9 +7,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Scanner;
+import java.util.EnumSet;
+import java.util.function.Consumer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.instedd.rsync_java_client.SyncMode;
 import org.instedd.rsync_java_client.util.Processes;
 import org.instedd.rsync_java_client.util.Processes.Exit;
 
@@ -18,10 +21,12 @@ public class RsyncSynchronizer {
   private final Log log = LogFactory.getLog(RsyncSynchronizer.class);
 
   private RsyncCommandBuilder commandBuilder;
+  private EnumSet<SyncMode> mode;
   private Collection<RsyncSynchronizerListener> listeners = new ArrayList<>();
 
-  public RsyncSynchronizer(RsyncCommandBuilder commandBuilder) {
+  public RsyncSynchronizer(RsyncCommandBuilder commandBuilder, EnumSet<SyncMode> mode) {
     this.commandBuilder = commandBuilder;
+    this.mode = mode;
   }
 
   public void setUp() {
@@ -29,33 +34,47 @@ public class RsyncSynchronizer {
     checkRsyncAvailable();
   }
 
-  public void uploadDocuments() throws IOException {
-    log.info("Will sync files from " + commandBuilder.getLocalOutboxPath() + " to " + commandBuilder.getRemoteInboxPath() + "");
-    this.sync(commandBuilder.buildUploadCommand());
+  public void sync() throws IOException {
+    notify(l -> l.transferStarted());
+
+    try {
+      List<String> uploadedFiles = new ArrayList<>(), downloadedFiles = new ArrayList<>();
+
+      try {
+        if (mode.contains(SyncMode.UPLOAD))
+          uploadedFiles.addAll(uploadDocuments());
+        if (mode.contains(SyncMode.DOWNLOAD))
+          downloadedFiles.addAll(downloadDocuments());
+      } catch (InterruptedException e) {
+        log.info("Command interrupted");
+      }
+
+      notify(l -> l.transferCompleted(uploadedFiles, downloadedFiles));
+    } catch (Exception e) {
+      notify(l -> l.transferFailed(e.getMessage()));
+    }
   }
 
-  public void downloadDocuments() throws IOException {
+  public List<String> uploadDocuments() throws InterruptedException, IOException {
+    log.info("Will sync files from " + commandBuilder.getLocalOutboxPath() + " to " + commandBuilder.getRemoteInboxPath() + "");
+    return sync(commandBuilder.buildUploadCommand());
+  }
+
+  public List<String> downloadDocuments() throws InterruptedException, IOException {
     log.info("Will sync files from " + commandBuilder.getRemoteOutboxPath() + " to " + commandBuilder.getLocalInboxPath() + "");
-    this.sync(commandBuilder.buildDownloadCommand());
+    return sync(commandBuilder.buildDownloadCommand());
   }
 
   public void addListener(RsyncSynchronizerListener listener) {
     listeners.add(listener);
   }
 
-  protected synchronized void sync(ProcessBuilder command) throws IOException {
-    Exit exit;
-    try {
-      exit = runCommand(command);
-    } catch (InterruptedException e) {
-      log.info("Command interrupted");
-      return;
+  protected synchronized List<String> sync(ProcessBuilder command) throws InterruptedException, IOException {
+    Exit exit = runCommand(command);
+    if (exit.getValue() != 0) {
+      throw new IOException(exit.getStderr());
     }
-
-    List<String> transferredFilenames = parseTransferredFilenames(exit.getStdout());
-    if (!transferredFilenames.isEmpty()) {
-      fireFilesTransfered(transferredFilenames);
-    }
+    return parseTransferredFilenames(exit.getStdout());
   }
 
   private Exit runCommand(ProcessBuilder command) throws IOException, InterruptedException {
@@ -93,9 +112,8 @@ public class RsyncSynchronizer {
     return new File(commandBuilder.getOutboxLocalDir()).mkdirs();
   }
 
-  protected void fireFilesTransfered(List<String> transferredFilenames) {
-    for (RsyncSynchronizerListener listener : listeners)
-      listener.onFilesTransfered(transferredFilenames);
+  private void notify(Consumer<RsyncSynchronizerListener> action) {
+    listeners.stream().forEach(action);
   }
 
 }

@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.EnumSet;
+import java.util.List;
 
 import org.apache.commons.lang.SystemUtils;
 import org.instedd.rsync_java_client.RsyncCommandBuilder;
@@ -52,7 +54,7 @@ public class RsyncSynchronizerIntegrationTest {
       }
     };
 
-    synchronizer = new RsyncSynchronizer(new RsyncCommandBuilder(settings));
+    synchronizer = new RsyncSynchronizer(new RsyncCommandBuilder(settings), EnumSet.of(SyncMode.DOWNLOAD, SyncMode.UPLOAD));
   }
 
   @Test
@@ -114,8 +116,18 @@ public class RsyncSynchronizerIntegrationTest {
   private AtomicBoolean setupSynchronizerWithListener() {
     synchronizer.setUp();
     final AtomicBoolean eventProperlyFired = new AtomicBoolean(false);
-    synchronizer.addListener(transferredFilenames -> //
-        eventProperlyFired.set(transferredFilenames.equals(Arrays.asList("sample"))));
+    synchronizer.addListener(new RsyncSynchronizerListener() {
+      @Override
+      public void transferCompleted(List<String> uploadedFiles, List<String> downloadedFiles) {
+        eventProperlyFired.set(
+          uploadedFiles.equals(Arrays.asList("sample")) ||
+          downloadedFiles.equals(Arrays.asList("sample"))
+        );
+      }
+
+      @Override public void transferStarted() {}
+      @Override public void transferFailed(String message) {}
+    });
     return eventProperlyFired;
   }
 

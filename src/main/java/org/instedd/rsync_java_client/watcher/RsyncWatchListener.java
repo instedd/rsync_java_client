@@ -12,17 +12,15 @@ public class RsyncWatchListener implements PathWatchListener {
 
   private static final Log log = LogFactory.getLog(RsyncWatchListener.class);
   private RsyncSynchronizer synchronizer;
-  private SyncMode mode;
 
-  public RsyncWatchListener(RsyncSynchronizer synchronizer, SyncMode mode) {
+  public RsyncWatchListener(RsyncSynchronizer synchronizer) {
     this.synchronizer = synchronizer;
-    this.mode = mode;
   }
 
   @Override
   public void onWatchStarted() throws IOException {
     log.info("Watch started. Doing initial sync");
-    mode.doSync(synchronizer);
+    synchronizer.sync();
   }
 
   @Override
@@ -32,29 +30,6 @@ public class RsyncWatchListener implements PathWatchListener {
 
   public void onGlobalPathChange(Path path) throws IOException {
     log.info("Path changed. Doing sync");
-    mode.doSync(synchronizer);
+    synchronizer.sync();
   }
-
-  // TODO move to general sync code
-  public enum SyncMode {
-    DOWNLOAD {
-      public void doSync(RsyncSynchronizer synchronizer) throws IOException {
-        synchronizer.downloadDocuments();
-      }
-    },
-    UPLOAD {
-      public void doSync(RsyncSynchronizer synchronizer) throws IOException {
-        synchronizer.uploadDocuments();
-      }
-    },
-    FULL {
-      public void doSync(RsyncSynchronizer synchronizer) throws IOException {
-        DOWNLOAD.doSync(synchronizer);
-        UPLOAD.doSync(synchronizer);
-      }
-    };
-    public abstract void doSync(RsyncSynchronizer synchronizer) throws IOException;
-
-  }
-
 }

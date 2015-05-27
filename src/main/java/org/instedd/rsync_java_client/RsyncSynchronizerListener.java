@@ -4,6 +4,8 @@ import java.util.List;
 
 public interface RsyncSynchronizerListener {
 
-  void onFilesTransfered(List<String> transferredFilenames);
+  public void transferStarted();
+  public void transferFailed(String errorMessage);
+  public void transferCompleted(List<String> uploadedFiles, List<String> downloadedFiles);
 
 }

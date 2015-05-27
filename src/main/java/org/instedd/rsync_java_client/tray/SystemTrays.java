@@ -11,7 +11,7 @@ import java.net.URL;
 
 public class SystemTrays {
 
-  public static void open(String tooltip, URL imageUrl, PopupMenuConfigurer configurer) {
+  public static TrayIcon open(String tooltip, URL imageUrl, PopupMenuConfigurer configurer) {
     if (!SystemTray.isSupported()) {
       throw new UnsupportedOperationException("Tray is not available");
     }
@@ -20,8 +20,10 @@ public class SystemTrays {
     Toolkit toolkit = Toolkit.getDefaultToolkit();
     PopupMenu menu = new PopupMenu(tooltip);
     configurer.configure(menu);
+    TrayIcon icon = createIcon(tooltip, imageUrl, menu, toolkit);
     if (imageUrl != null)
-      unchecked(() -> tray.add(createIcon(tooltip, imageUrl, menu, toolkit)));
+      unchecked(() -> tray.add(icon));
+    return icon;
   }
 
   public static TrayIcon createIcon(String tooltip, URL imageUrl, PopupMenu menu, Toolkit toolkit) {

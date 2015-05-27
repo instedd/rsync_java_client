@@ -1,22 +1,24 @@
 package org.instedd.rsync_java_client.app;
 
 import java.nio.file.Paths;
+import java.util.EnumSet;
 
 import org.instedd.rsync_java_client.RsyncCommandBuilder;
 import org.instedd.rsync_java_client.RsyncSynchronizer;
+import org.instedd.rsync_java_client.RsyncSynchronizerListener;
 import org.instedd.rsync_java_client.Settings;
+import org.instedd.rsync_java_client.SyncMode;
 import org.instedd.rsync_java_client.watcher.PathWatcher;
 import org.instedd.rsync_java_client.watcher.RsyncWatchListener;
-import org.instedd.rsync_java_client.watcher.RsyncWatchListener.SyncMode;
 
 public class RSyncApplication {
 
   private final Settings settings;
-  private final SyncMode syncMode;
+  private final EnumSet<SyncMode> syncMode;
 
   private transient Thread thread;
 
-  public RSyncApplication(Settings settings, SyncMode syncMode) {
+  public RSyncApplication(Settings settings, EnumSet<SyncMode> syncMode) {
     this.settings = settings;
     this.syncMode = syncMode;
   }
@@ -24,7 +26,7 @@ public class RSyncApplication {
   public void start(RSyncApplicationMonitor... monitors) {
     RsyncSynchronizer synchronizer = newSynchronizer();
     // TODO log sync mode
-    PathWatcher watcher = new PathWatcher(Paths.get(settings.localOutboxDir), new RsyncWatchListener(synchronizer, syncMode));
+    PathWatcher watcher = new PathWatcher(Paths.get(settings.localOutboxDir), new RsyncWatchListener(synchronizer));
     thread = new Thread(() -> {
       watcher.watch();
       System.exit(0);
@@ -32,6 +34,9 @@ public class RSyncApplication {
 
     for(RSyncApplicationMonitor monitor : monitors) {
       monitor.start(this);
+      if (monitor instanceof RsyncSynchronizerListener) {
+        synchronizer.addListener((RsyncSynchronizerListener) monitor);
+      }
     }
     synchronizer.setUp();
     thread.start();
@@ -49,7 +54,7 @@ public class RSyncApplication {
 
   protected RsyncSynchronizer newSynchronizer() {
     RsyncCommandBuilder commandBuilder = new RsyncCommandBuilder(settings);
-    RsyncSynchronizer synchronizer = new RsyncSynchronizer(commandBuilder);
+    RsyncSynchronizer synchronizer = new RsyncSynchronizer(commandBuilder, syncMode);
     return synchronizer;
   }
 
