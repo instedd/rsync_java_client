@@ -14,7 +14,6 @@ import java.nio.file.Path;
 
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.builder.ToStringBuilder;
-import org.instedd.rsync_java_client.settings.PropertiesSettingsStore;
 
 public class Settings {
 
