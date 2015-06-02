@@ -5,8 +5,8 @@ import org.junit.Test;
 
 public class SettingsUnitTest {
 
-  @Test(expected = IllegalArgumentException.class)
-  public void validatesMissingSettings() {
+  @Test(expected = Settings.ValidationError.class)
+  public void validatesMissingSettings() throws Settings.ValidationError {
     new Settings().validate();
   }
 
