@@ -105,7 +105,6 @@ public class Settings {
     }
 
     knownHostsFilePath = this.rootPath.resolve("known_hosts").toString();
-    localInboxDir = this.rootPath.resolve("cdx/inbox").toString();
   }
 
   public Settings() {
