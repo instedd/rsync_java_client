@@ -164,7 +164,7 @@ public class Settings {
     } catch (ValidationError e) {
       return false;
     }
-    }
+  }
 
   public void deactivate() {
     remoteHost = null;
@@ -179,7 +179,97 @@ public class Settings {
     return ToStringBuilder.reflectionToString(this);
   }
 
-  public static Settings fromProperties(final Properties props) {
-    return new PropertiesSettingsStore(props).getSettings();
+  protected int loadProperty(Properties properties, String key, int defaultValue) {
+    String value = properties.getProperty(key);
+    if (value != null) {
+      return Integer.valueOf(value);
+    }
+    return defaultValue;
+  }
+
+  protected boolean loadProperty(Properties properties, String key, boolean defaultValue) {
+    String value = properties.getProperty(key);
+    if (value != null) {
+      return Boolean.valueOf(value);
+    }
+    return defaultValue;
+  }
+
+  protected String loadProperty(Properties properties, String key, String defaultValue) {
+    return properties.getProperty(key, defaultValue);
+  }
+
+  public void fromProperties(Properties properties) {
+    remoteHost = loadProperty(properties, "remote.host", remoteHost);
+    remotePort = loadProperty(properties, "remote.port", remotePort);
+    remoteUser = loadProperty(properties, "remote.user", remoteUser);
+    remoteKey = loadProperty(properties, "remote.key", remoteKey);
+    knownHostsFilePath = loadProperty(properties, "known.hosts.file.path", knownHostsFilePath);
+    localInboxDir = loadProperty(properties, "local.inbox.dir", localInboxDir);
+    localOutboxDir = loadProperty(properties, "local.outbox.dir", localOutboxDir);
+    remoteInboxDir = loadProperty(properties, "remote.inbox.dir", remoteInboxDir);
+    remoteOutboxDir = loadProperty(properties, "remote.outbox.dir", remoteOutboxDir);
+    strictHostChecking = loadProperty(properties, "strict.host.checking", strictHostChecking);
+  }
+
+  public void load() throws IOException {
+    Path settingsPath = rootPath.resolve("settings.properties");
+    if (!settingsPath.toFile().exists()) {
+      return;
+    }
+
+    Properties properties = new Properties();
+    try (InputStream in = Files.newInputStream(settingsPath)) {
+      properties.load(in);
+    }
+    fromProperties(properties);
+  }
+
+  protected void saveProperty(Properties properties, String key, String value) {
+    if (value != null)
+      properties.setProperty(key, value);
+  }
+
+  protected void saveProperty(Properties properties, String key, int value) {
+    properties.setProperty(key, Integer.toString(value));
+  }
+
+  protected void saveProperty(Properties properties, String key, boolean value) {
+    properties.setProperty(key, Boolean.toString(value));
+  }
+
+  public Properties toProperties() {
+    Properties properties = new Properties();
+    saveProperty(properties, "remote.host", remoteHost);
+    saveProperty(properties, "remote.port", remotePort);
+    saveProperty(properties, "remote.user", remoteUser);
+    saveProperty(properties, "remote.key", remoteKey);
+    saveProperty(properties, "known.hosts.file.path", knownHostsFilePath);
+    saveProperty(properties, "local.inbox.dir", localInboxDir);
+    saveProperty(properties, "local.outbox.dir", localOutboxDir);
+    saveProperty(properties, "remote.inbox.dir", remoteInboxDir);
+    saveProperty(properties, "remote.outbox.dir", remoteOutboxDir);
+    saveProperty(properties, "strict.host.checking", strictHostChecking);
+    return properties;
+  }
+
+  public void save() throws IOException {
+    Path settingsPath = rootPath.resolve("settings.properties");
+    try (OutputStream out = Files.newOutputStream(settingsPath)) {
+      toProperties().store(out, null);
+    }
+  }
+
+  public void copyTo(Settings other) {
+    other.remoteHost = this.remoteHost;
+    other.remotePort = this.remotePort;
+    other.remoteUser = this.remoteUser;
+    other.remoteKey = this.remoteKey;
+    other.knownHostsFilePath = this.knownHostsFilePath;
+    other.localInboxDir = this.localInboxDir;
+    other.localOutboxDir = this.localOutboxDir;
+    other.remoteInboxDir = this.remoteInboxDir;
+    other.remoteOutboxDir = this.remoteOutboxDir;
+    other.strictHostChecking = this.strictHostChecking;
   }
 }
