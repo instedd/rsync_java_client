@@ -13,6 +13,8 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import org.instedd.rsync_java_client.settings.PropertiesSettingsStore;
 
 public class Settings {
+  public String appName;
+
   /**
    * The host to connect to
    */
@@ -86,6 +88,7 @@ public class Settings {
   public boolean strictHostChecking = true;
 
   public Settings(String appName, String rootPath) {
+    this.appName = appName;
     if (rootPath == null) {
       if (System.getProperty("os.name").contains("Windows")) {
         this.rootPath = FileSystems.getDefault().getPath(System.getenv("LOCALAPPDATA"), appName);
