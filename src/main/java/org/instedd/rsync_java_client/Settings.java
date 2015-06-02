@@ -1,10 +1,14 @@
 package org.instedd.rsync_java_client;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import java.util.Arrays;
 import java.util.Properties;
 
+import java.nio.file.Files;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 
@@ -13,6 +17,20 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import org.instedd.rsync_java_client.settings.PropertiesSettingsStore;
 
 public class Settings {
+
+  public static class ValidationError extends Exception {
+    private String field;
+
+    public ValidationError(String field, String message) {
+      super(message);
+      this.field = field;
+    }
+
+    public String getField() {
+      return field;
+    }
+  }
+
   public String appName;
 
   /**
@@ -111,13 +129,49 @@ public class Settings {
     this("rsync_java_client", null);
   }
 
-  public void validate() {
-    for (Object f : Arrays.asList(remoteHost, remotePort)) {
-      Validate.notNull(f, "Remote host settings missing (required: host, port)");
-    }// TODO this validation depends on sync mode
-    if (localInboxDir == null && localOutboxDir == null) {
-      throw new IllegalArgumentException("either inboxLocalDir or outboxLocalDir must be set");
+  public void validate() throws ValidationError {
+    if (localInboxDir != null) {
+      if (localInboxDir.equals(""))
+        throw new ValidationError("localInboxDir", "Inbox directory is not set");
+
+      File localInbox = new File(localInboxDir);
+      if (!localInbox.exists())
+        throw new ValidationError("localInboxDir", "Inbox directory does not exist");
+      if (!localInbox.isDirectory())
+        throw new ValidationError("localInboxDir", "Inbox directory path doesn't point to a directory");
     }
+
+    if (localOutboxDir != null) {
+      if (localOutboxDir.equals(""))
+        throw new ValidationError("localOutboxDir", "Outbox directory is not set");
+
+      File localOutbox = new File(localOutboxDir);
+      if (!localOutbox.exists())
+        throw new ValidationError("localOutboxDir", "Outbox directory does not exist");
+      if (!localOutbox.isDirectory())
+        throw new ValidationError("localOutboxDir", "Outbox directory path doesn't point to a directory");
+    }
+
+    if (remoteHost == null) {
+      throw new ValidationError("remoteHost", "Remote host is missing");
+    }
+  }
+
+  public boolean isValid() {
+    try {
+      validate();
+      return true;
+    } catch (ValidationError e) {
+      return false;
+    }
+    }
+
+  public void deactivate() {
+    remoteHost = null;
+  }
+
+  public boolean isActivated() {
+    return remoteHost != null;
   }
 
   @Override

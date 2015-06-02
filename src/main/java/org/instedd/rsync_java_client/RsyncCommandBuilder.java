@@ -13,7 +13,6 @@ public class RsyncCommandBuilder {
 
   public RsyncCommandBuilder(Settings settings) {
     this.settings = settings;
-    this.settings.validate();
   }
 
   private ProcessBuilder process(String... tokens) {
