@@ -23,7 +23,7 @@ public class SystemTrayMonitor implements RSyncApplicationMonitor {
   }
 
   protected void configureMenu(RSyncApplication application, PopupMenu menu) {
-    MenuItem menuItem = new MenuItem("Stop Sync");
+    MenuItem menuItem = new MenuItem("Exit");
     menuItem.addActionListener(e -> {
       application.stop();
     });
