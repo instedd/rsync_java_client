@@ -15,30 +15,26 @@ public class RSyncApplication {
 
   private final Settings settings;
   private final EnumSet<SyncMode> syncMode;
+  private final RsyncSynchronizer synchronizer;
 
   private transient Thread thread;
 
   public RSyncApplication(Settings settings, EnumSet<SyncMode> syncMode) {
     this.settings = settings;
     this.syncMode = syncMode;
+    this.synchronizer = newSynchronizer();
   }
 
-  public void start(RSyncApplicationMonitor... monitors) {
-    RsyncSynchronizer synchronizer = newSynchronizer();
-    // TODO log sync mode
-    PathWatcher watcher = new PathWatcher(Paths.get(settings.localOutboxDir), new RsyncWatchListener(synchronizer));
-    thread = new Thread(() -> {
-      watcher.watch();
-      System.exit(0);
-    }, "watcher-thread");
-
-    for(RSyncApplicationMonitor monitor : monitors) {
-      monitor.start(this);
-      if (monitor instanceof RsyncSynchronizerListener) {
+  public void addMonitor(RSyncApplicationMonitor monitor) {
+    monitor.start(this);
+    if (monitor instanceof RsyncSynchronizerListener) {
         synchronizer.addListener((RsyncSynchronizerListener) monitor);
       }
-    }
-    synchronizer.setUp();
+  }
+
+  public void start() {
+    PathWatcher watcher = new PathWatcher(Paths.get(settings.localOutboxDir), new RsyncWatchListener(synchronizer));
+    thread = new Thread(() -> { watcher.watch(); }, "watcher-thread");
     thread.start();
   }
 
@@ -52,9 +48,15 @@ public class RSyncApplication {
     }
   }
 
+  public void restart() {
+    stop();
+    start();
+  }
+
   protected RsyncSynchronizer newSynchronizer() {
     RsyncCommandBuilder commandBuilder = new RsyncCommandBuilder(settings);
     RsyncSynchronizer synchronizer = new RsyncSynchronizer(commandBuilder, syncMode);
+    synchronizer.setUp();
     return synchronizer;
   }
 

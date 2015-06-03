@@ -26,6 +26,7 @@ public class SystemTrayMonitor implements RSyncApplicationMonitor {
     MenuItem menuItem = new MenuItem("Exit");
     menuItem.addActionListener(e -> {
       application.stop();
+      System.exit(0);
     });
     menu.add(menuItem);
   }
