@@ -28,8 +28,12 @@ public class RSyncApplication {
   public void addMonitor(RSyncApplicationMonitor monitor) {
     monitor.start(this);
     if (monitor instanceof RsyncSynchronizerListener) {
-        synchronizer.addListener((RsyncSynchronizerListener) monitor);
-      }
+      synchronizer.addListener((RsyncSynchronizerListener) monitor);
+    }
+  }
+
+  public Settings getSettings() {
+    return settings;
   }
 
   public void start() {
