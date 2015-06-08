@@ -3,19 +3,15 @@ package org.instedd.rsync_java_client.app;
 import java.nio.file.Paths;
 import java.util.EnumSet;
 
-import org.instedd.rsync_java_client.RsyncCommandBuilder;
-import org.instedd.rsync_java_client.RsyncSynchronizer;
-import org.instedd.rsync_java_client.RsyncSynchronizerListener;
-import org.instedd.rsync_java_client.Settings;
-import org.instedd.rsync_java_client.SyncMode;
-import org.instedd.rsync_java_client.watcher.PathWatcher;
-import org.instedd.rsync_java_client.watcher.RsyncWatchListener;
+import org.instedd.rsync_java_client.*;
+import org.instedd.rsync_java_client.watcher.*;
 
 public class RSyncApplication {
 
   private final Settings settings;
   private final EnumSet<SyncMode> syncMode;
   private final RsyncSynchronizer synchronizer;
+  private static final long retryInterval = 5 * 60 * 1000; // 5 minutes
 
   private transient Thread thread;
 
@@ -61,6 +57,7 @@ public class RSyncApplication {
     RsyncCommandBuilder commandBuilder = new RsyncCommandBuilder(settings);
     RsyncSynchronizer synchronizer = new RsyncSynchronizer(commandBuilder, syncMode);
     synchronizer.setUp();
+    synchronizer.addListener(new RetryListener(synchronizer, retryInterval));
     return synchronizer;
   }
 

@@ -34,7 +34,7 @@ public class RsyncSynchronizer {
     checkRsyncAvailable();
   }
 
-  public void sync() throws IOException {
+  public void sync() {
     notify(l -> l.transferStarted());
 
     try {
