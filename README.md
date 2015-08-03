@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/instedd/rsync_java_client.svg?branch=master)](https://travis-ci.org/instedd/rsync_java_client)
+
 rsync_java_client
 ======
 
@@ -24,4 +26,3 @@ If you want to import into Eclipse, just run:
 ```
 mvn eclipse:eclipse
 ```
-
