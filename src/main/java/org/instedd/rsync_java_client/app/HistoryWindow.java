@@ -7,6 +7,7 @@ import javax.swing.*;
 import org.ocpsoft.prettytime.PrettyTime;
 
 public class HistoryWindow extends JFrame {
+  private static final long serialVersionUID = 1L;
 
   public HistoryWindow(HistoryModel model, JPopupMenu menu) {
     setUndecorated(true);
@@ -112,6 +113,8 @@ public class HistoryWindow extends JFrame {
   }
 
   static class HistoryCellRenderer extends JPanel implements ListCellRenderer<HistoryModel.Entry> {
+    private static final long serialVersionUID = 1L;
+    
     private JLabel iconLabel;
     private JLabel textLabel;
     private JLabel dateLabel;

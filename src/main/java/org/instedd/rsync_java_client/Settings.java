@@ -4,20 +4,18 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
-import java.util.Arrays;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Properties;
 
-import java.nio.file.Files;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
-
-import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 public class Settings {
 
   public static class ValidationError extends Exception {
+    private static final long serialVersionUID = 1L;
+    
     private String field;
 
     public ValidationError(String field, String message) {

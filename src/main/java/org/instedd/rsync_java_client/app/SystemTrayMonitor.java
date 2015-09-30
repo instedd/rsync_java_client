@@ -1,13 +1,19 @@
 package org.instedd.rsync_java_client.app;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
+import java.awt.AWTException;
+import java.awt.Image;
+import java.awt.SystemTray;
+import java.awt.Toolkit;
+import java.awt.TrayIcon;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.net.URL;
 import java.util.List;
-import org.instedd.rsync_java_client.RsyncSynchronizerListener;
 
-import org.instedd.rsync_java_client.tray.SystemTrays;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+
+import org.instedd.rsync_java_client.RsyncSynchronizerListener;
 
 public class SystemTrayMonitor implements RSyncApplicationMonitor, RsyncSynchronizerListener {
   private String tooltip;

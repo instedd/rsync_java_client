@@ -7,6 +7,8 @@ import javax.swing.AbstractListModel;
 import org.instedd.rsync_java_client.Settings;
 
 class HistoryModel extends AbstractListModel<HistoryModel.Entry> {
+  private static final long serialVersionUID = 1L;
+  
   private LinkedList<Entry> entries;
   private Entry error;
   private static final int MAX_SIZE = 10;

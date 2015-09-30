@@ -12,6 +12,7 @@ public class ConsoleMonitor implements RSyncApplicationMonitor {
       while (scanner.hasNextLine() && app.isRunning())
         if (scanner.nextLine().equals("bye"))
           break;
+      scanner.close();
       app.stop();
     });
     thread.start();
